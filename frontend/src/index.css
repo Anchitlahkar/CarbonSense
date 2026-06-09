@@ -1,4 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Syne:wght@400..800&display=swap');
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/700.css";
 
 @tailwind base;
 @tailwind components;
@@ -7,17 +15,33 @@
 @layer base {
   body {
     @apply bg-bg-primary text-text-primary font-body antialiased selection:bg-accent-green selection:text-bg-primary;
+    background-color: #050A0E;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-bold;
+    @apply font-display font-bold tracking-tight text-text-primary uppercase;
+  }
+
+  /* Keyboard focus outline rule */
+  *:focus-visible {
+    @apply outline-none ring-1 ring-accent-blue/50 ring-offset-2 ring-offset-bg-primary;
   }
 }
 
-/* Custom scrollbar to match biopunk aesthetic */
+@layer utilities {
+  .border-subtle {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+  .bg-primary-surface {
+    background-color: #0B1220;
+  }
+}
+
+/* Custom scrollbar to match minimalist dark theme */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -25,11 +49,25 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #0A1628;
-  border-radius: 4px;
-  border: 2px solid #050A0E;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00FF87;
+  background: rgba(255, 255, 255, 0.2);
 }
+
+/* Accessibility: prefers-reduced-motion configuration */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+

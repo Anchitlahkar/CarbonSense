@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import DNA from './pages/DNA';
+import PlanetTwin from './pages/PlanetTwin';
+import Optimization from './pages/Optimization';
+import Forecasts from './pages/Forecasts';
 import Scanner from './pages/Scanner';
 import Coach from './pages/Coach';
-import Community from './pages/Community';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -29,6 +32,38 @@ export const App: React.FC = () => {
             }
           />
           <Route
+            path="/twin"
+            element={
+              <Layout>
+                <PlanetTwin />
+              </Layout>
+            }
+          />
+          <Route
+            path="/dna"
+            element={
+              <Layout>
+                <DNA />
+              </Layout>
+            }
+          />
+          <Route
+            path="/forecasts"
+            element={
+              <Layout>
+                <Forecasts />
+              </Layout>
+            }
+          />
+          <Route
+            path="/optimization"
+            element={
+              <Layout>
+                <Optimization />
+              </Layout>
+            }
+          />
+          <Route
             path="/scanner"
             element={
               <Layout>
@@ -41,14 +76,6 @@ export const App: React.FC = () => {
             element={
               <Layout>
                 <Coach />
-              </Layout>
-            }
-          />
-          <Route
-            path="/community"
-            element={
-              <Layout>
-                <Community />
               </Layout>
             }
           />
@@ -69,3 +96,4 @@ export const App: React.FC = () => {
   );
 };
 export default App;
+
