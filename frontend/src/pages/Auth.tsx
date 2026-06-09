@@ -46,82 +46,85 @@ export const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050A0E] text-text-primary flex items-center justify-center p-4 selection:bg-accent-green selection:text-bg-primary font-body">
-      <div className="w-full max-w-[380px] bg-[#070D18] border border-white/[0.04] rounded-lg p-7 relative overflow-hidden">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex items-center justify-center p-4 selection:bg-accent-green/30 font-body relative overflow-hidden">
+      {/* Subtle grid background overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px]" />
+
+      <div className="w-full max-w-[360px] bg-bg-surface/80 backdrop-blur-md border border-white/[0.06] rounded-sm p-6 relative z-10 shadow-2xl">
         {/* Header Logo */}
-        <div className="flex flex-col items-center mb-7">
-          <div className="w-9 h-9 rounded bg-white/[0.01] flex items-center justify-center border border-white/[0.05] mb-3">
-            <Activity className="text-accent-green" size={18} />
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-10 h-10 rounded-sm bg-bg-card border border-white/[0.08] flex items-center justify-center mb-3 shadow-inner">
+            <Activity className="text-accent-green opacity-80" size={18} />
           </div>
-          <h2 className="font-display font-black text-base tracking-[0.2em] text-text-primary uppercase">
+          <h2 className="font-display font-black text-[13px] tracking-[0.25em] text-text-primary uppercase mb-1">
             {isSignUp ? 'REGISTER_ACCOUNT' : 'SECURE_SIGN_IN'}
           </h2>
-          <p className="text-[8px] text-text-subtle font-mono mt-1 tracking-widest uppercase opacity-60">
-            CARBONSENSE_RESEARCH_TERMINAL_V1.5
+          <p className="text-[7.5px] text-text-muted/60 font-mono tracking-[0.3em] uppercase font-bold">
+            CARBONSENSE_TERMINAL_V1.6
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 p-3 rounded bg-accent-red/5 border border-accent-red/10 text-accent-red text-[10px] font-mono flex items-center space-x-2">
+          <div className="mb-4 p-2.5 rounded-sm bg-accent-red/10 border border-accent-red/20 text-accent-red/90 text-[9px] font-mono flex items-center space-x-2 font-bold tracking-tighter uppercase shadow-[inset_0_0_10px_-5px_#FF3366]">
             <span>⚠️</span>
-            <span className="uppercase tracking-tighter">{error}</span>
+            <span>{error}</span>
           </div>
         )}
 
         {/* Auth form */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={handleSubmit} className="space-y-3">
           {isSignUp && (
-            <div className="space-y-1">
-              <label className="text-[9px] font-mono font-black text-text-subtle tracking-widest block uppercase">
+            <div className="space-y-1.5">
+              <label className="text-[8px] font-mono font-black text-text-muted/60 tracking-[0.2em] block uppercase">
                 RESEARCHER_ID
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-muted/40">
-                  <UserPlus size={14} />
+                <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-text-muted/40">
+                  <UserPlus size={12} />
                 </span>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="e.g. researcher_01"
-                  className="w-full bg-[#050A0E] border border-white/[0.04] focus:border-accent-green/50 text-text-primary pl-9 pr-3 py-2 rounded text-[11px] transition-all font-mono outline-none uppercase tracking-tighter"
+                  className="w-full bg-bg-primary/80 border border-white/[0.06] focus:border-accent-green/60 text-text-primary pl-8 pr-3 py-1.5 rounded-sm text-[10.5px] transition-all font-mono outline-none uppercase tracking-tighter placeholder:text-text-muted/30 focus:shadow-[0_0_15px_-5px_rgba(0,255,135,0.2)]"
                 />
               </div>
             </div>
           )}
 
-          <div className="space-y-1">
-            <label className="text-[9px] font-mono font-black text-text-subtle tracking-widest block uppercase">
+          <div className="space-y-1.5">
+            <label className="text-[8px] font-mono font-black text-text-muted/60 tracking-[0.2em] block uppercase">
               EMAIL_ADDRESS
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-muted/40">
-                <Mail size={14} />
+              <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-text-muted/40">
+                <Mail size={12} />
               </span>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ID@CARBONSENSE.ORG"
-                className="w-full bg-[#050A0E] border border-white/[0.04] focus:border-accent-green/50 text-text-primary pl-9 pr-3 py-2 rounded text-[11px] transition-all font-mono outline-none uppercase tracking-tighter"
+                className="w-full bg-bg-primary/80 border border-white/[0.06] focus:border-accent-green/60 text-text-primary pl-8 pr-3 py-1.5 rounded-sm text-[10.5px] transition-all font-mono outline-none uppercase tracking-tighter placeholder:text-text-muted/30 focus:shadow-[0_0_15px_-5px_rgba(0,255,135,0.2)]"
               />
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[9px] font-mono font-black text-text-subtle tracking-widest block uppercase">
+          <div className="space-y-1.5">
+            <label className="text-[8px] font-mono font-black text-text-muted/60 tracking-[0.2em] block uppercase">
               SECURITY_KEY
             </label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-muted/40">
-                <Lock size={14} />
+              <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-text-muted/40">
+                <Lock size={12} />
               </span>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#050A0E] border border-white/[0.04] focus:border-accent-green/50 text-text-primary pl-9 pr-3 py-2 rounded text-[11px] transition-all font-mono outline-none tracking-widest"
+                className="w-full bg-bg-primary/80 border border-white/[0.06] focus:border-accent-green/60 text-text-primary pl-8 pr-3 py-1.5 rounded-sm text-[10.5px] transition-all font-mono outline-none tracking-widest focus:shadow-[0_0_15px_-5px_rgba(0,255,135,0.2)]"
               />
             </div>
           </div>
@@ -129,16 +132,16 @@ export const Auth: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2.5 rounded bg-accent-green text-bg-primary font-mono font-black text-[10px] tracking-[0.2em] transition-all disabled:opacity-50 select-none uppercase cursor-pointer mt-2"
+            className="w-full py-2 rounded-sm bg-accent-green text-bg-primary font-mono font-black text-[9.5px] tracking-[0.25em] transition-all disabled:opacity-40 select-none uppercase cursor-pointer mt-3 shadow-[0_0_15px_-5px_#00FF87] hover:bg-accent-green/90"
           >
             {isLoading ? 'ESTABLISHING_LINK...' : isSignUp ? 'CREATE_ACCOUNT' : 'AUTHORIZE_SESSION'}
           </button>
         </form>
 
         {/* Separator */}
-        <div className="relative flex items-center justify-center my-5">
+        <div className="relative flex items-center justify-center my-4">
           <div className="absolute inset-x-0 h-px bg-white/[0.03]" />
-          <span className="relative bg-[#070D18] px-3 text-[8px] font-mono text-text-subtle/50 tracking-[0.3em] font-black uppercase">
+          <span className="relative bg-bg-surface px-3 text-[7.5px] font-mono text-text-muted/40 tracking-[0.3em] font-black uppercase">
             OR
           </span>
         </div>
@@ -146,20 +149,20 @@ export const Auth: React.FC = () => {
         {/* Google Auth Option */}
         <button
           onClick={triggerGoogleOAuth}
-          className="w-full py-2 rounded bg-white/[0.01] border border-white/[0.06] hover:border-white/[0.12] text-text-primary font-mono font-bold text-[9px] flex items-center justify-center space-x-2 transition-all select-none uppercase cursor-pointer tracking-widest"
+          className="w-full py-1.5 rounded-sm bg-white/[0.02] border border-white/[0.05] hover:border-accent-blue/30 hover:bg-accent-blue/5 text-text-primary/90 font-mono font-bold text-[8.5px] flex items-center justify-center space-x-2 transition-all select-none uppercase cursor-pointer tracking-[0.2em]"
         >
-          <ShieldCheck size={12} className="text-accent-blue" />
+          <ShieldCheck size={11} className="text-accent-blue/80" />
           <span>SIGN_IN_WITH_OAUTH_2.0</span>
         </button>
 
         {/* Switch panel */}
-        <div className="mt-7 text-center">
+        <div className="mt-6 text-center">
           <button
             onClick={() => {
               setIsSignUp(!isSignUp);
               setError('');
             }}
-            className="text-text-muted/60 hover:text-accent-green transition-colors font-mono text-[9px] uppercase tracking-tighter"
+            className="text-text-muted/50 hover:text-accent-green/80 transition-colors font-mono text-[8px] uppercase tracking-tighter font-bold"
           >
             {isSignUp ? '[ ALREADY REGISTERED? CLICK TO AUTHORIZE ]' : '[ REQUEST NEW CREDENTIALS / SIGN UP ]'}
           </button>

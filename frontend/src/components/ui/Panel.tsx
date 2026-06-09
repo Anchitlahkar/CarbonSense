@@ -24,20 +24,20 @@ export const Panel: React.FC<PanelProps> = ({
   let levelClass = '';
   switch (level) {
     case 1:
-      levelClass = 'bg-bg-surface border border-white/[0.08] shadow-sm';
+      levelClass = 'bg-bg-surface border border-white/[0.06] shadow-[0_4px_20px_-12px_rgba(0,0,0,0.5)]';
       break;
     case 2:
-      levelClass = 'bg-bg-surface border border-white/[0.05]';
+      levelClass = 'bg-bg-surface/80 border border-white/[0.04] backdrop-blur-sm';
       break;
     case 3:
-      levelClass = 'bg-bg-surface border border-white/[0.03]';
+      levelClass = 'bg-bg-card/40 border border-white/[0.03]';
       break;
     case 4:
-      levelClass = 'bg-bg-card border border-white/[0.02]';
+      levelClass = 'bg-bg-card/20 border border-transparent';
       break;
   }
 
-  // Left Border Status Indicator (Level 1 and 2 highlight)
+  // Left Border Status Indicator
   let statusBorderClass = '';
   if (status) {
     const borderColor = 
@@ -45,13 +45,13 @@ export const Panel: React.FC<PanelProps> = ({
       status === 'warning' ? 'border-l-accent-amber' :
       status === 'danger' ? 'border-l-accent-red' :
       'border-l-accent-blue';
-    statusBorderClass = `border-l-2 ${borderColor}`;
+    statusBorderClass = `border-l-[3px] ${borderColor}`;
   }
 
   return (
     <div
-      className={`rounded-lg transition-all duration-200 ${paddingClass} ${levelClass} ${statusBorderClass} ${
-        hoverable ? 'hover:border-white/[0.16] hover:bg-white/[0.02]' : ''
+      className={`rounded-sm transition-all duration-300 ${paddingClass} ${levelClass} ${statusBorderClass} ${
+        hoverable ? 'hover:border-white/[0.12] hover:bg-white/[0.02]' : ''
       } ${className}`}
       {...props}
     >

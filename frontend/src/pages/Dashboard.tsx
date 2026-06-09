@@ -1,20 +1,16 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCarbonStore from '../store/carbonStore';
 import { 
   Panel, 
   SectionHeader, 
-  StatusPill, 
-  TrendIndicator, 
   Skeleton, 
   PanelError,
   IntelligenceBrief,
-  ForecastStrip,
   MetricCard
 } from '../components/ui';
 import { 
   Activity, 
-  Zap, 
   ChevronRight, 
   ShieldAlert,
   Sliders,
@@ -123,30 +119,30 @@ export const Dashboard: React.FC = () => {
   ].sort((a, b) => b.ratio - a.ratio);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-3 font-body">
+    <div className="max-w-7xl mx-auto space-y-2.5 font-body">
       {/* 1. Cockpit Header */}
       <SectionHeader 
         title="MISSION CONTROL" 
         description="Executive intelligence cockpit synthesizing real-time footprint, forecast divergence, and behavioral DNA metrics."
         actions={
-          <div className="flex items-center space-x-2 text-[8px] font-mono text-text-subtle">
+          <div className="flex items-center space-x-2 text-[7.5px] font-mono text-text-muted/60">
             <span className="w-1 h-1 rounded-full bg-accent-green animate-pulse" />
-            <span className="uppercase tracking-widest">Telemetry: Active</span>
+            <span className="uppercase tracking-[0.2em] font-bold">Telemetry: Active</span>
           </div>
         }
       />
 
       {/* 2. Top Layer: Executive Briefing & Mission-Critical Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
         {/* Daily Intelligence Brief (Required) */}
         <div className="lg:col-span-8">
           <IntelligenceBrief 
             title="Intelligence Briefing"
-            badge="Engine v1.5"
+            badge="Engine v1.6-X"
             narrative={dynamicBriefText}
             bulletPoints={dynamicBullets}
             forecastConfidence={confidenceLabel as 'High' | 'Medium' | 'Low'}
-            behaviorFreshness="Updated 2m ago"
+            behaviorFreshness="SYNCED 2M AGO"
             modelIntegrity={planetTwinProfile.currentWorld.healthIndex.score}
             level={1}
             status="info"
@@ -185,32 +181,32 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* 3. Middle Layer: Emissions Breakdown, DNA Genome, and Forecast Momentum */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
         {/* Current Emissions breakdown */}
-        <Panel level={2} compact className="flex flex-col justify-between">
+        <Panel level={2} compact className="flex flex-col justify-between min-h-[160px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
-              <span className="text-[9px] font-bold text-text-muted font-mono tracking-widest">EMISSIONS RATIOS</span>
-              <Sliders className="w-2.5 h-2.5 text-text-subtle" />
+              <span className="text-[8px] font-bold text-text-muted/60 font-mono tracking-[0.2em] uppercase">Telemetry Ratios</span>
+              <Sliders className="w-2.5 h-2.5 text-text-muted/40" />
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {categoryRatios.map((cat, idx) => (
                 <div key={idx} className="space-y-0.5">
-                  <div className="flex justify-between text-[8px] font-mono">
-                    <span className="text-text-primary uppercase font-bold">{cat.label}</span>
-                    <span className="text-text-muted">{(cat.ratio * 100).toFixed(0)}%</span>
+                  <div className="flex justify-between text-[7.5px] font-mono tracking-tight">
+                    <span className="text-text-primary/80 uppercase font-bold">{cat.label}</span>
+                    <span className="text-text-muted/60">{(cat.ratio * 100).toFixed(0)}%</span>
                   </div>
-                  <div className="h-0.5 bg-white/[0.04] rounded-full overflow-hidden">
-                    <div className={`h-full ${cat.color} rounded-full`} style={{ width: `${cat.ratio * 100}%` }} />
+                  <div className="h-0.5 bg-white/[0.02] rounded-full overflow-hidden">
+                    <div className={`h-full ${cat.color} rounded-full opacity-80`} style={{ width: `${cat.ratio * 100}%` }} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="text-[8px] text-text-subtle font-mono pt-2 border-t border-white/[0.04] flex justify-between items-center mt-2">
-            <span>Mean: {currentEmissionsMean.toFixed(1)} kg/d</span>
-            <button onClick={() => navigate('/twin')} className="text-accent-blue hover:underline flex items-center">
+          <div className="text-[7.5px] text-text-muted/40 font-mono pt-1.5 border-t border-white/[0.03] flex justify-between items-center mt-2 uppercase tracking-tighter">
+            <span>Mean: <strong className="text-text-primary/60">{currentEmissionsMean.toFixed(1)} kg/d</strong></span>
+            <button onClick={() => navigate('/twin')} className="text-accent-blue/60 hover:text-accent-blue transition-colors flex items-center font-bold">
               <span>SIMULATION</span>
               <ChevronRight size={8} />
             </button>
@@ -218,65 +214,65 @@ export const Dashboard: React.FC = () => {
         </Panel>
 
         {/* Carbon DNA snapshot */}
-        <Panel level={2} compact className="flex flex-col justify-between">
+        <Panel level={2} compact className="flex flex-col justify-between min-h-[160px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
-              <span className="text-[9px] font-bold text-text-muted font-mono tracking-widest">DNA GENOME</span>
-              <Activity className="w-2.5 h-2.5 text-text-subtle" />
+              <span className="text-[8px] font-bold text-text-muted/60 font-mono tracking-[0.2em] uppercase">DNA Genome</span>
+              <Activity className="w-2.5 h-2.5 text-text-muted/40" />
             </div>
             
-            <div className="p-2 bg-bg-card border border-white/[0.03] rounded">
-              <span className="text-[8px] font-mono text-text-subtle block uppercase">Archetype</span>
+            <div className="p-1.5 bg-bg-card border border-white/[0.03] rounded-sm">
+              <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest">Archetype Classification</span>
               <span className="text-[10px] font-bold text-text-primary block tracking-wider uppercase mt-0.5 truncate">
                 {carbonDNAProfile.archetype.replace(/([A-Z])/g, ' $1').trim()}
               </span>
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex justify-between text-[8px] font-mono">
-                <span className="text-text-muted uppercase">Volatility</span>
-                <span className="text-text-primary">{carbonDNAProfile.dimensions.behaviorVolatility}%</span>
+              <div className="flex justify-between text-[7.5px] font-mono tracking-tighter">
+                <span className="text-text-muted/50 uppercase">Volatility</span>
+                <span className="text-text-primary/70">{carbonDNAProfile.dimensions.behaviorVolatility}%</span>
               </div>
-              <div className="h-0.5 bg-white/[0.04] rounded-full overflow-hidden">
-                <div className="h-full bg-accent-amber rounded-full" style={{ width: `${carbonDNAProfile.dimensions.behaviorVolatility}%` }} />
+              <div className="h-0.5 bg-white/[0.02] rounded-full overflow-hidden">
+                <div className="h-full bg-accent-amber opacity-80" style={{ width: `${carbonDNAProfile.dimensions.behaviorVolatility}%` }} />
               </div>
 
-              <div className="flex justify-between text-[8px] font-mono">
-                <span className="text-text-muted uppercase">Readiness</span>
-                <span className="text-text-primary">{carbonDNAProfile.dimensions.optimizationReadiness}%</span>
+              <div className="flex justify-between text-[7.5px] font-mono tracking-tighter">
+                <span className="text-text-muted/50 uppercase">Readiness</span>
+                <span className="text-text-primary/70">{carbonDNAProfile.dimensions.optimizationReadiness}%</span>
               </div>
-              <div className="h-0.5 bg-white/[0.04] rounded-full overflow-hidden">
-                <div className="h-full bg-accent-green rounded-full" style={{ width: `${carbonDNAProfile.dimensions.optimizationReadiness}%` }} />
+              <div className="h-0.5 bg-white/[0.02] rounded-full overflow-hidden">
+                <div className="h-full bg-accent-green opacity-80" style={{ width: `${carbonDNAProfile.dimensions.optimizationReadiness}%` }} />
               </div>
             </div>
           </div>
           <button 
             onClick={() => navigate('/dna')} 
-            className="w-full text-center text-[8px] font-mono font-bold text-text-primary bg-white/5 hover:bg-white/10 border border-white/10 rounded py-1 transition-all mt-2 uppercase"
+            className="w-full text-center text-[8px] font-mono font-black text-text-primary/60 hover:text-text-primary bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] rounded-sm py-1 transition-all mt-2 uppercase tracking-[0.1em]"
           >
-            [ OPEN DNA PROFILE ]
+            Open DNA Profile
           </button>
         </Panel>
 
         {/* Forecast Momentum preview */}
-        <Panel level={2} compact className="flex flex-col justify-between">
+        <Panel level={2} compact className="flex flex-col justify-between min-h-[160px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
-              <span className="text-[9px] font-bold text-text-muted font-mono tracking-widest">MOMENTUM</span>
-              <TrendingDown className="w-2.5 h-2.5 text-text-subtle" />
+              <span className="text-[8px] font-bold text-text-muted/60 font-mono tracking-[0.2em] uppercase">Momentum</span>
+              <TrendingDown className="w-2.5 h-2.5 text-text-muted/40" />
             </div>
 
             <div className="space-y-1">
               <div className="flex items-center justify-between text-[8px] font-mono">
-                <span className="text-text-subtle uppercase">Baseline (365d):</span>
-                <span className="text-text-primary font-bold">{Math.round(planetTwinProfile.currentWorld.trajectory.annualEmissionsKg)} kg</span>
+                <span className="text-text-muted/50 uppercase tracking-tighter">Baseline (365d):</span>
+                <span className="text-text-primary/80 font-bold">{Math.round(planetTwinProfile.currentWorld.trajectory.annualEmissionsKg)} kg</span>
               </div>
               <div className="flex items-center justify-between text-[8px] font-mono">
-                <span className="text-accent-green uppercase">Optimized:</span>
+                <span className="text-accent-green/60 uppercase tracking-tighter font-bold">Optimized:</span>
                 <span className="text-accent-green font-bold">{Math.round(planetTwinProfile.optimizedWorld.trajectory.annualEmissionsKg)} kg</span>
               </div>
               <div className="flex items-center justify-between text-[8px] font-mono border-t border-white/[0.02] pt-1 mt-1">
-                <span className="text-text-subtle uppercase">Difference:</span>
+                <span className="text-text-muted/40 uppercase tracking-tighter">Net Divergence:</span>
                 <span className="text-accent-green font-bold">
                   -{Math.round(planetTwinProfile.currentWorld.trajectory.annualEmissionsKg - planetTwinProfile.optimizedWorld.trajectory.annualEmissionsKg)} kg
                 </span>
@@ -285,31 +281,31 @@ export const Dashboard: React.FC = () => {
           </div>
           <button 
             onClick={() => navigate('/forecasts')} 
-            className="w-full text-center text-[8px] font-mono font-bold text-text-primary bg-white/5 hover:bg-white/10 border border-white/10 rounded py-1 transition-all mt-2 uppercase"
+            className="w-full text-center text-[8px] font-mono font-black text-text-primary/60 hover:text-text-primary bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] rounded-sm py-1 transition-all mt-2 uppercase tracking-[0.1em]"
           >
-            [ ANALYZE TRAJECTORIES ]
+            Analyze Trajectories
           </button>
         </Panel>
       </div>
 
-      {/* 4. Bottom Layer: Telemetry Signals, Priority Actions Grid (MCDA) and Audit Freshness */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      {/* 4. Bottom Layer: Telemetry Signals, Priority Actions Grid (MCDA) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
         {/* Telemetry Signals */}
         <div className="lg:col-span-4">
-          <Panel level={3} compact className="space-y-2 h-full">
+          <Panel level={3} compact className="space-y-2 h-full min-h-[180px]">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-              <span className="text-[9px] font-bold text-text-muted font-mono tracking-widest">SIGNALS</span>
-              <Database className="w-2.5 h-2.5 text-text-subtle" />
+              <span className="text-[8px] font-bold text-text-muted/60 font-mono tracking-[0.2em] uppercase">Signals</span>
+              <Database className="w-2.5 h-2.5 text-text-muted/40" />
             </div>
 
-            <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-[140px] overflow-y-auto pr-1 scrollbar-thin">
               {behaviorProfile.signals.map((sig, idx) => (
-                <div key={idx} className="p-1.5 bg-white/[0.01] border border-white/[0.03] rounded flex flex-col space-y-0.5">
-                  <div className="flex justify-between items-center text-[7px] font-mono">
-                    <span className="text-accent-blue font-bold tracking-widest">[{sig.type}]</span>
-                    <span className="text-text-subtle">C:{Math.round(sig.confidence * 100)}%</span>
+                <div key={idx} className="p-1 bg-white/[0.01] border border-white/[0.03] rounded-sm flex flex-col space-y-0.5">
+                  <div className="flex justify-between items-center text-[6.5px] font-mono">
+                    <span className="text-accent-blue/70 font-bold tracking-widest uppercase">[{sig.type}]</span>
+                    <span className="text-text-muted/30 font-bold tracking-tighter">CONF: {Math.round(sig.confidence * 100)}%</span>
                   </div>
-                  <p className="text-[9px] font-bold text-text-primary leading-tight truncate">{sig.description}</p>
+                  <p className="text-[8.5px] font-bold text-text-primary/70 leading-tight truncate">{sig.description}</p>
                 </div>
               ))}
             </div>
@@ -318,10 +314,10 @@ export const Dashboard: React.FC = () => {
 
         {/* Priority Actions Grid - Decision Impact Previews */}
         <div className="lg:col-span-8">
-          <Panel level={3} compact className="space-y-2 h-full">
+          <Panel level={3} compact className="space-y-2 h-full min-h-[180px]">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1">
-              <span className="text-[9px] font-bold text-text-muted font-mono tracking-widest">IMPACT PREVIEWS</span>
-              <span className="text-[7px] font-mono text-text-subtle uppercase tracking-widest">MCDA Optimization Ranking</span>
+              <span className="text-[8px] font-bold text-text-muted/60 font-mono tracking-[0.2em] uppercase">Impact Previews</span>
+              <span className="text-[7px] font-mono text-text-muted/30 uppercase tracking-[0.15em] font-bold">MCDA Optimization Ranking</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -330,30 +326,30 @@ export const Dashboard: React.FC = () => {
                 return (
                   <div 
                     key={idx} 
-                    className="p-2 bg-bg-card/50 border border-white/[0.03] rounded flex flex-col justify-between space-y-1.5 hover:border-white/[0.06] transition-colors"
+                    className="p-1.5 bg-bg-card/30 border border-white/[0.03] rounded-sm flex flex-col justify-between space-y-1.5 hover:border-white/[0.08] transition-colors group"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[7px] font-mono bg-white/5 border border-white/10 px-1 rounded text-text-subtle uppercase tracking-tighter">
+                      <span className="text-[6.5px] font-mono bg-white/[0.03] border border-white/[0.06] px-1 rounded-sm text-text-muted/50 uppercase tracking-tighter font-bold">
                         Rank #{cand.rank}
                       </span>
-                      <span className={`text-[7px] font-mono font-bold uppercase ${
-                        cand.difficultyLevel === 'easy' ? 'text-accent-green' : 'text-accent-amber'
+                      <span className={`text-[6.5px] font-mono font-black uppercase tracking-[0.05em] ${
+                        cand.difficultyLevel === 'easy' ? 'text-accent-green/70' : 'text-accent-amber/70'
                       }`}>
                         {cand.difficultyLevel}
                       </span>
                     </div>
-                    <h4 className="text-[10px] font-bold text-text-primary tracking-tight truncate">
+                    <h4 className="text-[9.5px] font-bold text-text-primary/90 tracking-tight truncate group-hover:text-text-primary transition-colors">
                       {cand.title}
                     </h4>
                     
-                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/[0.02] text-[8px] font-mono">
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/[0.02] text-[7.5px] font-mono tracking-tighter uppercase font-bold">
                       <div>
-                        <span className="text-text-subtle block uppercase tracking-tighter">Monthly</span>
-                        <span className="text-accent-green font-bold">-{Math.round(cand.estimatedSavingsKg)}kg</span>
+                        <span className="text-text-muted/30 block">Monthly</span>
+                        <span className="text-accent-green/80">-{Math.round(cand.estimatedSavingsKg)}kg</span>
                       </div>
                       <div>
-                        <span className="text-text-subtle block uppercase tracking-tighter">Annual</span>
-                        <span className="text-accent-green font-bold">-{annualSavings}kg</span>
+                        <span className="text-text-muted/30 block">Annual</span>
+                        <span className="text-accent-green/80">-{annualSavings}kg</span>
                       </div>
                     </div>
                   </div>
@@ -365,20 +361,20 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* 5. Telemetry Logs Metadata (System Telemetry Panel) */}
-      <Panel level={4} compact className="flex items-center justify-between text-[8px] font-mono text-text-subtle py-1.5 px-3">
+      <Panel level={4} compact className="flex items-center justify-between text-[7px] font-mono text-text-muted/40 py-1.5 px-3 uppercase tracking-[0.1em]">
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-1">
-            <ShieldCheck className="w-3 h-3 text-accent-green" />
-            <span className="font-black text-text-primary tracking-widest uppercase">Audit Pass</span>
+          <div className="flex items-center space-x-1.5">
+            <ShieldCheck className="w-2.5 h-2.5 text-accent-green opacity-60" />
+            <span className="font-black text-text-primary/60 tracking-[0.2em]">Audit: Pass</span>
           </div>
-          <div className="hidden sm:flex items-center space-x-3 border-l border-white/5 pl-3">
-            <span>Confidence: <strong className="text-accent-green">94%</strong></span>
-            <span>Integrity: <strong className="text-accent-blue">100</strong></span>
-            <span>Version: <strong>1.5-X</strong></span>
+          <div className="hidden sm:flex items-center space-x-3 border-l border-white/[0.03] pl-3">
+            <span>Confidence: <strong className="text-accent-green/60">94%</strong></span>
+            <span>Integrity: <strong className="text-accent-blue/60">100</strong></span>
+            <span>Logic: <strong>1.5-X</strong></span>
           </div>
         </div>
-        <div className="uppercase tracking-[0.2em] font-black opacity-40">
-          PROMPTWARS.2026
+        <div className="tracking-[0.3em] font-black opacity-30 text-[6.5px]">
+          TERMINAL_SYNX_COCKPIT_V1.0
         </div>
       </Panel>
     </div>

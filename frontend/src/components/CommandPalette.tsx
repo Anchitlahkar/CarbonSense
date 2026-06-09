@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
   Terminal, 
@@ -141,89 +142,108 @@ export const CommandPalette: React.FC = () => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div 
-      ref={overlayRef}
-      onClick={handleOverlayClick}
-      className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9999] flex items-start justify-center pt-[15vh] px-4"
-    >
-      <div 
-        className="w-full max-w-lg bg-[#0B1220] border border-white/[0.08] rounded-xl shadow-2xl overflow-hidden flex flex-col font-body"
-        onKeyDown={handleKeyDown}
-      >
-        {/* Search header */}
-        <div className="flex items-center space-x-3 px-4 py-3 border-b border-white/[0.06]">
-          <Search size={18} className="text-text-muted shrink-0" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={search}
-            onChange={(e) => { setSearch(e.target.value); setActiveIndex(0); }}
-            placeholder="Type a command or search platform..."
-            className="w-full bg-transparent text-text-primary placeholder-text-subtle text-sm outline-none border-none focus:ring-0"
-            aria-label="Command search input"
-          />
-          <div className="shrink-0 flex items-center space-x-1">
-            <kbd className="text-[10px] font-mono px-1.5 py-0.5 bg-white/5 border border-white/10 rounded text-text-muted uppercase">ESC</kbd>
-          </div>
-        </div>
-
-        {/* List items */}
-        <div 
-          ref={listRef}
-          className="max-h-[300px] overflow-y-auto p-2 space-y-0.5 scrollbar-thin"
-          role="listbox"
-          aria-label="Commands list"
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-[9999] flex items-start justify-center pt-[15vh] px-4"
+          ref={overlayRef}
+          onClick={handleOverlayClick}
         >
-          {filtered.length === 0 ? (
-            <div className="px-4 py-6 text-center text-xs text-text-subtle">
-              No results matching "{search}"
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.96, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-lg bg-bg-surface border border-white/[0.08] rounded-sm shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col font-body relative"
+            onKeyDown={handleKeyDown}
+          >
+            {/* Subtle glow effect behind modal */}
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-blue/30 to-transparent" />
+            
+            {/* Search header */}
+            <div className="flex items-center space-x-3 px-4 py-3 border-b border-white/[0.06]">
+              <Search size={16} className="text-text-muted/60 shrink-0" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setActiveIndex(0); }}
+                placeholder="Search platform commands..."
+                className="w-full bg-transparent text-text-primary placeholder-text-subtle text-[13px] outline-none border-none focus:ring-0 font-display font-medium"
+                aria-label="Command search input"
+              />
+              <div className="shrink-0 flex items-center space-x-1">
+                <kbd className="text-[9px] font-mono px-1.5 py-0.5 bg-white/5 border border-white/10 rounded-sm text-text-muted uppercase tracking-tighter">ESC</kbd>
+              </div>
             </div>
-          ) : (
-            filtered.map((cmd, idx) => {
-              const active = idx === activeIndex;
-              return (
-                <div
-                  key={idx}
-                  onClick={cmd.action}
-                  onMouseEnter={() => setActiveIndex(idx)}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-xs cursor-pointer transition-colors ${
-                    active 
-                      ? 'bg-white/5 text-accent-green' 
-                      : 'text-text-primary hover:bg-white/[0.02]'
-                  }`}
-                  role="option"
-                  aria-selected={active}
-                >
-                  <div className="flex items-center space-x-3 min-w-0">
-                    <div className={`${active ? 'text-accent-green' : 'text-text-muted'} shrink-0`}>
-                      {cmd.icon}
-                    </div>
-                    <span className="font-medium truncate">{cmd.label}</span>
-                  </div>
-                  <div className="flex items-center space-x-2 shrink-0">
-                    <span className="text-[10px] font-mono text-text-subtle px-1.5 py-0.5 bg-white/[0.02] border border-white/[0.04] rounded uppercase">
-                      {cmd.category}
-                    </span>
-                    {active && (
-                      <span className="text-[10px] font-mono text-text-muted animate-pulse">↵</span>
-                    )}
-                  </div>
+
+            {/* List items */}
+            <div 
+              ref={listRef}
+              className="max-h-[340px] overflow-y-auto p-1.5 space-y-0.5"
+              role="listbox"
+              aria-label="Commands list"
+            >
+              {filtered.length === 0 ? (
+                <div className="px-4 py-8 text-center text-xs text-text-subtle font-mono uppercase tracking-widest opacity-40">
+                  No results matching "{search}"
                 </div>
-              );
-            })
-          )}
-        </div>
-        
-        {/* Footer info panel */}
-        <div className="px-4 py-2 bg-white/[0.01] border-t border-white/[0.04] flex items-center justify-between text-[10px] font-mono text-text-subtle">
-          <span>Navigate with ↑↓ and press Enter to select</span>
-          <span>CarbonSense X Control Palette</span>
-        </div>
-      </div>
-    </div>
+              ) : (
+                filtered.map((cmd, idx) => {
+                  const active = idx === activeIndex;
+                  return (
+                    <div
+                      key={idx}
+                      onClick={cmd.action}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      className={`flex items-center justify-between px-3 py-2 rounded-sm text-[11px] cursor-pointer transition-all duration-150 ${
+                        active 
+                          ? 'bg-accent-blue/5 text-accent-blue shadow-[inset_4px_0_0_0_#00D4FF]' 
+                          : 'text-text-primary/80 hover:bg-white/[0.02]'
+                      }`}
+                      role="option"
+                      aria-selected={active}
+                    >
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <div className={`${active ? 'text-accent-blue' : 'text-text-muted/40'} shrink-0 transition-colors`}>
+                          {React.cloneElement(cmd.icon as React.ReactElement, { size: 14 })}
+                        </div>
+                        <span className={`font-medium truncate uppercase tracking-tight ${active ? 'opacity-100' : 'opacity-70'}`}>
+                          {cmd.label}
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-2 shrink-0">
+                        <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded-sm uppercase tracking-tighter border ${
+                          active 
+                            ? 'text-accent-blue/70 bg-accent-blue/5 border-accent-blue/10' 
+                            : 'text-text-muted/30 bg-white/[0.01] border-white/[0.04]'
+                        }`}>
+                          {cmd.category}
+                        </span>
+                        {active && (
+                          <span className="text-[10px] font-mono text-accent-blue animate-pulse">↵</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            
+            {/* Footer info panel */}
+            <div className="px-4 py-1.5 bg-white/[0.01] border-t border-white/[0.04] flex items-center justify-between text-[8px] font-mono text-text-subtle/40 uppercase tracking-[0.2em]">
+              <span>Navigate with ↑↓ and Enter</span>
+              <span>CarbonSense Telemetry Controller</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

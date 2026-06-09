@@ -24,14 +24,14 @@ export function DataTable<T>({
   className = '',
 }: DataTableProps<T>) {
   return (
-    <div className={`overflow-x-auto w-full border border-white/[0.04] rounded-lg bg-bg-surface ${className}`}>
-      <table className="w-full text-left border-collapse text-[10px]">
+    <div className={`overflow-x-auto w-full border border-white/[0.04] rounded-sm bg-bg-surface/40 backdrop-blur-sm ${className}`}>
+      <table className="w-full text-left border-collapse text-[9px]">
         <thead>
-          <tr className="border-b border-white/[0.04] bg-white/[0.01]">
+          <tr className="border-b border-white/[0.04] bg-white/[0.02]">
             {columns.map((col, idx) => (
               <th
                 key={idx}
-                className={`px-2.5 py-1.5 font-bold text-text-muted tracking-widest uppercase font-display text-[8px] ${col.className || ''}`}
+                className={`px-2 py-1 font-bold text-text-muted/60 tracking-[0.1em] uppercase font-display text-[7.5px] ${col.className || ''}`}
               >
                 {col.header}
               </th>
@@ -41,25 +41,25 @@ export function DataTable<T>({
         <tbody className="divide-y divide-white/[0.02] font-mono">
           {isLoading ? (
             <tr>
-              <td colSpan={columns.length} className="px-3 py-6 text-center text-text-muted">
-                <div className="flex items-center justify-center space-x-2">
-                  <span className="w-1 h-1 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1 h-1 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1 h-1 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '300ms' }} />
+              <td colSpan={columns.length} className="px-2 py-4 text-center text-text-muted">
+                <div className="flex items-center justify-center space-x-1">
+                  <span className="w-0.5 h-0.5 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-0.5 h-0.5 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-0.5 h-0.5 rounded-full bg-accent-blue animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </td>
             </tr>
           ) : data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-3 py-6 text-center text-text-muted font-body">
+              <td colSpan={columns.length} className="px-2 py-4 text-center text-text-muted font-body">
                 {emptyState || 'No telemetry data recorded.'}
               </td>
             </tr>
           ) : (
             data.map((item) => (
-              <tr key={rowKey(item)} className="hover:bg-white/[0.01] transition-colors">
+              <tr key={rowKey(item)} className="hover:bg-white/[0.02] transition-colors">
                 {columns.map((col, idx) => (
-                  <td key={idx} className={`px-3 py-2 text-text-primary ${col.className || ''}`}>
+                  <td key={idx} className={`px-2 py-1.5 text-text-primary/90 border-r border-white/[0.01] last:border-r-0 ${col.className || ''}`}>
                     {col.render(item)}
                   </td>
                 ))}

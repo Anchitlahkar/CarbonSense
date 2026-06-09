@@ -3,18 +3,16 @@ import useCarbonStore from '../store/carbonStore';
 import { 
   Panel, 
   SectionHeader, 
-  StatusPill, 
   Skeleton, 
   PanelError,
-  IntelligenceBrief
+  IntelligenceBrief,
+  FadeIn
 } from '../components/ui';
 import { 
   TrendingUp, 
   ShieldAlert, 
   Flame, 
-  Database,
-  Sliders,
-  CheckCircle
+  Sliders
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -128,19 +126,19 @@ export const Forecasts: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-3 font-body">
+    <div className="max-w-7xl mx-auto space-y-2.5 font-body">
       {/* Page Header */}
       <SectionHeader 
         title="FORECASTS & ANALYTICS" 
         description="Applied machine learning forecasting showing baseline, momentum, and optimized pathways."
         actions={
-          <div className="flex bg-bg-surface border border-white/[0.04] rounded p-0.5 space-x-0.5 font-mono text-[8px]">
+          <div className="flex bg-bg-surface/60 border border-white/[0.04] rounded-sm p-0.5 space-x-0.5 font-mono text-[8px]">
             {(['30d', '90d', '365d'] as HorizonMode[]).map((hor) => (
               <button
                 key={hor}
                 onClick={() => setHorizon(hor)}
-                className={`px-2 py-1 rounded transition-colors font-bold uppercase tracking-widest ${
-                  horizon === hor ? 'bg-accent-blue text-white' : 'text-text-muted hover:text-white'
+                className={`px-3 py-1 rounded-sm transition-all duration-200 font-bold uppercase tracking-widest ${
+                  horizon === hor ? 'bg-accent-blue text-white shadow-[0_0_10px_-4px_#00D4FF]' : 'text-text-muted/40 hover:text-text-primary/70'
                 }`}
               >
                 {hor === '30d' ? '30 Days' : hor === '90d' ? '90 Days' : '365 Days'}
@@ -151,58 +149,60 @@ export const Forecasts: React.FC = () => {
       />
 
       {/* Trajectory Analytics Chart */}
-      <Panel level={1} compact className="space-y-2 p-3.5">
+      <Panel level={1} compact className="space-y-2 p-3.5 bg-bg-surface/40 border-white/[0.04]">
         <div className="flex justify-between items-center border-b border-white/[0.04] pb-1.5">
           <div className="flex items-center space-x-1.5">
-            <TrendingUp className="w-3 h-3 text-accent-blue" />
-            <h3 className="text-[9px] font-bold text-text-primary uppercase tracking-widest font-display">
+            <TrendingUp className="w-3 h-3 text-accent-blue opacity-70" />
+            <h3 className="text-[9px] font-bold text-text-muted/80 uppercase tracking-[0.2em] font-mono">
               Path Trajectory Momentum ({activeHorizonText})
             </h3>
           </div>
-          <span className="text-[8px] font-mono text-text-subtle uppercase tracking-widest">POLYNOMIAL_REGRESSION_ENGINE</span>
+          <span className="text-[7.5px] font-mono text-text-muted/30 uppercase tracking-[0.2em] font-bold">POLYNOMIAL_REGRESSION_ENGINE</span>
         </div>
 
-        <div className="w-full h-64 pt-2 font-mono text-[9px]">
+        <div className="w-full h-60 pt-2 font-mono text-[9px] relative">
+          <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px]" />
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 5, right: 5, left: -30, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.02)" vertical={false} />
-              <XAxis dataKey="day" stroke="rgba(255, 255, 255, 0.2)" fontSize={7} tickLine={false} />
-              <YAxis stroke="rgba(255, 255, 255, 0.2)" fontSize={7} tickLine={false} unit="kg" />
+              <XAxis dataKey="day" stroke="rgba(255, 255, 255, 0.2)" fontSize={7} tickLine={false} axisLine={false} />
+              <YAxis stroke="rgba(255, 255, 255, 0.2)" fontSize={7} tickLine={false} axisLine={false} unit="kg" />
               <Tooltip 
-                contentStyle={{ background: '#070D18', borderColor: 'rgba(255, 255, 255, 0.06)', borderRadius: '2px', fontSize: '9px' }}
-                labelStyle={{ color: '#FFFFFF', fontWeight: 'bold' }}
+                contentStyle={{ background: '#0A1628', borderColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', fontSize: '8px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.5)' }}
+                labelStyle={{ color: '#E8F4FD', fontWeight: 'bold', marginBottom: '4px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '2px' }}
+                itemStyle={{ padding: '0px' }}
               />
-              <Legend verticalAlign="top" height={24} iconType="circle" iconSize={4} wrapperStyle={{ fontSize: '8px', textTransform: 'uppercase', tracking: '0.1em' }} />
-              <Line type="monotone" name="Baseline" dataKey="Baseline" stroke="#EF4444" strokeWidth={1} dot={false} />
-              <Line type="monotone" name="Momentum" dataKey="Momentum" stroke="#F59E0B" strokeWidth={1} dot={false} />
-              <Line type="monotone" name="Optimized" dataKey="Optimized" stroke="#22C55E" strokeWidth={1} dot={false} />
+              <Legend verticalAlign="top" height={20} iconType="rect" iconSize={6} wrapperStyle={{ fontSize: '7.5px', textTransform: 'uppercase', letterSpacing: '0.15em', paddingBottom: '10px' }} />
+              <Line type="monotone" name="Baseline" dataKey="Baseline" stroke="#FF3366" strokeWidth={1.5} dot={false} strokeOpacity={0.8} />
+              <Line type="monotone" name="Momentum" dataKey="Momentum" stroke="#FFB800" strokeWidth={1.5} dot={false} strokeOpacity={0.8} />
+              <Line type="monotone" name="Optimized" dataKey="Optimized" stroke="#00FF87" strokeWidth={1.5} dot={false} strokeOpacity={0.8} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </Panel>
 
       {/* Drivers and Counterfactuals Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
         {/* Key Risk Drivers */}
         <div className="lg:col-span-5">
-          <Panel level={2} compact className="space-y-2.5 h-full p-3.5">
+          <Panel level={2} compact className="space-y-2.5 h-full p-3.5 bg-bg-surface/50 border-white/[0.04]">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
               <div className="flex items-center space-x-1.5">
-                <Flame className="w-3 h-3 text-accent-red" />
-                <span className="text-[9px] font-bold text-text-primary uppercase tracking-widest font-display">Risk Drivers</span>
+                <Flame className="w-3 h-3 text-accent-red opacity-70" />
+                <span className="text-[8.5px] font-bold text-text-muted/80 uppercase tracking-[0.2em] font-mono">Risk Drivers</span>
               </div>
-              <span className="text-[7px] font-mono text-text-subtle uppercase tracking-widest">Sensitivity</span>
+              <span className="text-[7.5px] font-mono text-text-muted/30 uppercase tracking-[0.2em] font-bold">Sensitivity</span>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {forecastProfile.riskDrivers.map((driver, idx) => (
                 <div key={idx} className="space-y-1">
-                  <div className="flex justify-between text-[8px] font-mono">
-                    <span className="text-text-primary font-bold uppercase tracking-tighter">{driver.driver}</span>
-                    <span className="text-accent-red font-bold">-{driver.contribution}% Influence</span>
+                  <div className="flex justify-between text-[7.5px] font-mono uppercase font-bold tracking-tighter">
+                    <span className="text-text-primary/70">{driver.driver}</span>
+                    <span className="text-accent-red/80">-{driver.contribution}% Influence</span>
                   </div>
-                  <div className="h-0.5 w-full bg-white/[0.04] rounded-full overflow-hidden">
-                    <div className="h-full bg-accent-red rounded-full" style={{ width: `${driver.contribution}%` }} />
+                  <div className="h-0.5 w-full bg-white/[0.02] rounded-full overflow-hidden">
+                    <div className="h-full bg-accent-red opacity-70" style={{ width: `${driver.contribution}%` }} />
                   </div>
                 </div>
               ))}
@@ -212,25 +212,25 @@ export const Forecasts: React.FC = () => {
 
         {/* Counterfactuals */}
         <div className="lg:col-span-7">
-          <Panel level={2} compact className="space-y-2.5 h-full p-3.5">
+          <Panel level={2} compact className="space-y-2.5 h-full p-3.5 bg-bg-surface/50 border-white/[0.04]">
             <div className="flex items-center justify-between border-b border-white/[0.04] pb-1.5">
               <div className="flex items-center space-x-1.5">
-                <Sliders className="w-3 h-3 text-accent-blue" />
-                <span className="text-[9px] font-bold text-text-primary uppercase tracking-widest font-display">Counterfactuals</span>
+                <Sliders className="w-3 h-3 text-accent-blue opacity-70" />
+                <span className="text-[8.5px] font-bold text-text-muted/80 uppercase tracking-[0.2em] font-mono">Counterfactuals</span>
               </div>
-              <span className="text-[7px] font-mono text-text-subtle uppercase tracking-widest">Alternative Pathing</span>
+              <span className="text-[7.5px] font-mono text-text-muted/30 uppercase tracking-[0.2em] font-bold">Alternative Pathing</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {forecastProfile.counterfactuals.slice(0, 4).map((cf, idx) => (
-                <div key={idx} className="p-2 bg-bg-card/50 border border-white/[0.03] rounded flex flex-col justify-between space-y-1 hover:border-white/[0.06] transition-colors">
+                <div key={idx} className="p-1.5 bg-bg-card/40 border border-white/[0.03] rounded-sm flex flex-col justify-between space-y-1.5 hover:border-white/[0.08] transition-all group">
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-bold text-text-primary uppercase tracking-tight truncate max-w-[80px]">{cf.action}</span>
-                    <span className="text-[7px] font-mono font-bold text-accent-blue uppercase tracking-widest">C:{(cf.confidence * 100).toFixed(0)}%</span>
+                    <span className="text-[9px] font-black text-text-primary/70 uppercase tracking-tight truncate max-w-[140px] group-hover:text-text-primary transition-colors">{cf.action}</span>
+                    <span className="text-[6.5px] font-mono font-black text-accent-blue/60 uppercase tracking-widest bg-accent-blue/5 border border-accent-blue/10 px-1 rounded-sm">C:{(cf.confidence * 100).toFixed(0)}%</span>
                   </div>
-                  <div className="flex justify-between text-[8px] font-mono text-text-subtle pt-1 border-t border-white/[0.02] uppercase tracking-tighter">
-                    <span>Div. Savings</span>
-                    <span className="text-accent-green font-bold">-{cf.historicalImpactKg}kg</span>
+                  <div className="flex justify-between text-[7.5px] font-mono text-text-muted/40 pt-1 border-t border-white/[0.02] uppercase tracking-[0.05em] font-bold">
+                    <span>Net Offset potential</span>
+                    <span className="text-accent-green/80">-{cf.historicalImpactKg}kg</span>
                   </div>
                 </div>
               ))}
@@ -240,17 +240,19 @@ export const Forecasts: React.FC = () => {
       </div>
 
       {/* Model Integrity & Narrative Intelligence Report */}
-      <IntelligenceBrief 
-        title="Predictive Integrity & Narrative Forecast"
-        badge="SCORE: 96%"
-        narrative={summaryText}
-        bulletPoints={bullets}
-        forecastConfidence="High"
-        behaviorFreshness="Validation Active"
-        modelIntegrity={forecastProfile.integrity.score}
-        level={3}
-        status="info"
-      />
+      <FadeIn delay={0.3}>
+        <IntelligenceBrief 
+          title="Predictive Integrity & Narrative Forecast"
+          badge="SCORE: 96.4%"
+          narrative={summaryText}
+          bulletPoints={bullets}
+          forecastConfidence="High"
+          behaviorFreshness="Validation SYNCED"
+          modelIntegrity={forecastProfile.integrity.score}
+          level={3}
+          status="info"
+        />
+      </FadeIn>
     </div>
   );
 };

@@ -22,14 +22,14 @@ function createScientificEarthTexture(scenario: 'current' | 'optimized' | 'aggre
 
   // Colors for continental data grids
   const baseGridColor = 
-    scenario === 'current' ? 'rgba(239, 68, 68, 0.25)' :
-    scenario === 'optimized' ? 'rgba(59, 130, 246, 0.25)' :
-    'rgba(34, 197, 94, 0.25)';
+    scenario === 'current' ? 'rgba(255, 51, 102, 0.2)' :
+    scenario === 'optimized' ? 'rgba(0, 212, 255, 0.2)' :
+    'rgba(0, 255, 135, 0.2)';
 
   const activeNodeColor = 
-    scenario === 'current' ? '#EF4444' :
-    scenario === 'optimized' ? '#3B82F6' :
-    '#22C55E';
+    scenario === 'current' ? '#FF3366' :
+    scenario === 'optimized' ? '#00D4FF' :
+    '#00FF87';
 
   // Draw simplified world continent boundaries as a grid of sci-fi telemetry dots
   const drawContinentBlob = (cx: number, cy: number, rx: number, ry: number) => {
@@ -39,13 +39,13 @@ function createScientificEarthTexture(scenario: 'current' | 'optimized' | 'aggre
     ctx.clip();
     
     // Draw dot matrix inside continent
-    const step = 8;
+    const step = 6;
     for (let x = cx - rx; x < cx + rx; x += step) {
       for (let y = cy - ry; y < cy + ry; y += step) {
         if (ctx.isPointInPath(x, y)) {
-          ctx.fillStyle = Math.random() > 0.85 ? activeNodeColor : baseGridColor;
+          ctx.fillStyle = Math.random() > 0.92 ? activeNodeColor : baseGridColor;
           ctx.beginPath();
-          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+          ctx.arc(x, y, 1.2, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -84,20 +84,20 @@ const EarthMesh: React.FC<EarthMeshProps> = ({ scenario, prefersReducedMotion })
     const isOptimized = scenario === 'optimized';
     
     return {
-      rotationSpeed: prefersReducedMotion ? 0 : (isCurrent ? 0.12 : isOptimized ? 0.08 : 0.05),
-      cloudSpeed: prefersReducedMotion ? 0 : (isCurrent ? -0.15 : isOptimized ? -0.1 : -0.06),
-      atmosphereColor: isCurrent ? '#EF4444' : isOptimized ? '#3B82F6' : '#22C55E',
-      atmosphereOpacity: isCurrent ? 0.55 : isOptimized ? 0.4 : 0.25, // Current scenario has dense atmospheric carbon haze
+      rotationSpeed: prefersReducedMotion ? 0 : (isCurrent ? 0.15 : isOptimized ? 0.1 : 0.06),
+      cloudSpeed: prefersReducedMotion ? 0 : (isCurrent ? -0.18 : isOptimized ? -0.12 : -0.08),
+      atmosphereColor: isCurrent ? '#FF3366' : isOptimized ? '#00D4FF' : '#00FF87',
+      atmosphereOpacity: isCurrent ? 0.45 : isOptimized ? 0.35 : 0.25, // Current scenario has dense atmospheric carbon haze
     };
   }, [scenario, prefersReducedMotion]);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += delta * config.rotationSpeed;
     }
     if (cloudRef.current) {
       cloudRef.current.rotation.y += delta * config.cloudSpeed;
-      cloudRef.current.rotation.z += delta * 0.01;
+      cloudRef.current.rotation.z += delta * 0.005;
     }
   });
 
@@ -109,8 +109,10 @@ const EarthMesh: React.FC<EarthMeshProps> = ({ scenario, prefersReducedMotion })
         <meshStandardMaterial
           map={earthTexture}
           roughness={0.9}
-          metalness={0.1}
+          metalness={0.2}
           bumpScale={0.02}
+          emissive={config.atmosphereColor}
+          emissiveIntensity={0.05}
         />
       </mesh>
       
@@ -120,7 +122,7 @@ const EarthMesh: React.FC<EarthMeshProps> = ({ scenario, prefersReducedMotion })
         <meshStandardMaterial
           color={config.atmosphereColor}
           transparent={true}
-          opacity={0.12}
+          opacity={0.08}
           wireframe={true}
           blending={THREE.AdditiveBlending}
         />
@@ -139,18 +141,17 @@ const EarthMesh: React.FC<EarthMeshProps> = ({ scenario, prefersReducedMotion })
       </mesh>
 
       {/* 4. Outer Haze Layer */}
-      <mesh scale={1.15}>
+      <mesh scale={1.12}>
         <sphereGeometry args={[1.35, 32, 32]} />
         <meshBasicMaterial
           color={config.atmosphereColor}
           transparent={true}
-          opacity={config.atmosphereOpacity * 0.3}
+          opacity={config.atmosphereOpacity * 0.4}
           blending={THREE.AdditiveBlending}
           side={THREE.BackSide}
         />
       </mesh>
     </group>
-  );
   );
 };
 

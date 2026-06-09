@@ -25,16 +25,16 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ to, icon, label, active }) =>
   return (
     <Link
       to={to}
-      className={`flex items-center space-x-3 px-3 py-1.5 rounded-lg transition-colors group text-[10px] font-mono ${
+      className={`flex items-center space-x-2.5 px-2.5 py-1.5 rounded-sm transition-all duration-200 group text-[10px] font-mono ${
         active
-          ? 'bg-white/5 text-white border-l-2 border-accent-green pl-2.5 rounded-l-none'
-          : 'text-text-muted hover:text-white hover:bg-white/[0.02]'
+          ? 'bg-accent-green/5 text-accent-green border-r-2 border-accent-green shadow-[inset_-10px_0_15px_-10px_rgba(0,255,135,0.2)]'
+          : 'text-text-muted/60 hover:text-text-primary hover:bg-white/[0.03]'
       }`}
     >
-      <div className={`shrink-0 ${active ? 'text-accent-green' : 'text-text-muted group-hover:text-white'}`}>
-        {React.cloneElement(icon as React.ReactElement, { size: 14 })}
+      <div className={`shrink-0 ${active ? 'text-accent-green' : 'text-text-muted/40 group-hover:text-text-primary'}`}>
+        {React.cloneElement(icon as React.ReactElement, { size: 13 })}
       </div>
-      <span className="font-bold tracking-widest uppercase">{label}</span>
+      <span className={`font-bold tracking-[0.12em] uppercase ${active ? 'opacity-100' : 'opacity-80'}`}>{label}</span>
     </Link>
   );
 };
@@ -50,40 +50,39 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   };
 
   return (
-    <div className="flex min-h-screen bg-[#050A0E] text-text-primary overflow-hidden">
+    <div className="flex min-h-screen bg-bg-primary text-text-primary overflow-hidden selection:bg-accent-green/30">
       {/* Global Command Palette */}
       <CommandPalette />
 
       {/* Sidebar */}
-      <aside className="w-56 bg-[#070D18] border-r border-white/[0.04] flex flex-col justify-between p-3 shrink-0 font-body">
-        <div className="space-y-5">
+      <aside className="w-52 bg-bg-surface border-r border-white/[0.04] flex flex-col justify-between p-2.5 shrink-0 font-body relative z-20 shadow-2xl">
+        <div className="space-y-4">
           {/* Logo & Ctrl+K trigger button */}
           <div className="flex items-center justify-between px-2 py-2 border-b border-white/[0.03] mb-1">
-            <Link to="/dashboard" className="flex items-center space-x-2 select-none">
-              <Activity className="text-accent-green" size={18} />
-              <span className="text-[11px] font-display font-black tracking-[0.2em] text-white">
-                CARBONSENSE X
+            <Link to="/dashboard" className="flex items-center space-x-2 select-none group">
+              <Activity className="text-accent-green group-hover:rotate-12 transition-transform" size={16} />
+              <span className="text-[10px] font-display font-black tracking-[0.25em] text-text-primary">
+                CARBONSENSE
               </span>
             </Link>
             
-            {/* Ctrl + K badge */}
             <button 
               onClick={() => {
                 const event = new KeyboardEvent('keydown', { ctrlKey: true, key: 'k' });
                 window.dispatchEvent(event);
               }}
-              className="px-1.5 py-0.5 rounded border border-white/[0.08] hover:border-white/[0.2] bg-white/[0.02] text-[8px] font-mono text-text-subtle transition-all cursor-pointer"
-              title="Open command palette (Ctrl+K)"
+              className="px-1.5 py-0.5 rounded-sm border border-white/[0.08] hover:border-accent-blue/40 bg-white/[0.02] text-[7.5px] font-mono text-text-subtle transition-all cursor-pointer"
+              title="Open command (Ctrl+K)"
             >
               ⌘K
             </button>
           </div>
 
           {/* Navigation Links */}
-          <nav className="space-y-4">
+          <nav className="space-y-3.5">
             {/* Section 1: Dashboard */}
             <div className="space-y-1">
-              <div className="text-[8px] tracking-[0.2em] font-mono text-text-subtle/50 font-black px-3 uppercase">
+              <div className="text-[7.5px] tracking-[0.25em] font-mono text-text-muted/30 font-bold px-2.5 uppercase">
                 Observation
               </div>
               <SidebarItem
@@ -96,7 +95,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
             {/* Section 2: Planet Twin */}
             <div className="space-y-1">
-              <div className="text-[8px] tracking-[0.2em] font-mono text-text-subtle/50 font-black px-3 uppercase">
+              <div className="text-[7.5px] tracking-[0.25em] font-mono text-text-muted/30 font-bold px-2.5 uppercase">
                 Simulation
               </div>
               <SidebarItem
@@ -107,9 +106,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               />
             </div>
 
-            {/* Section 3: Intelligence */}
+            {/* Section  Intelligence */}
             <div className="space-y-1">
-              <div className="text-[8px] tracking-[0.2em] font-mono text-text-subtle/50 font-black px-3 uppercase">
+              <div className="text-[7.5px] tracking-[0.25em] font-mono text-text-muted/30 font-bold px-2.5 uppercase">
                 Intelligence
               </div>
               <div className="space-y-0.5">
@@ -136,7 +135,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
             {/* Section 4: Tools */}
             <div className="space-y-1">
-              <div className="text-[8px] tracking-[0.2em] font-mono text-text-subtle/50 font-black px-3 uppercase">
+              <div className="text-[7.5px] tracking-[0.25em] font-mono text-text-muted/30 font-bold px-2.5 uppercase">
                 Tools
               </div>
               <div className="space-y-0.5">
@@ -158,38 +157,54 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </div>
 
         {/* Footer Profile & Logout */}
-        {user && (
-          <div className="border-t border-white/[0.04] pt-3 space-y-2">
-            <Link to="/profile" className="flex items-center space-x-2.5 px-2 py-1.5 hover:bg-white/[0.02] rounded-lg transition-colors group">
-              <img
-                src={user.avatarUrl || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.username}`}
-                alt="Avatar"
-                className="w-7 h-7 rounded border border-white/[0.08] bg-bg-card group-hover:border-accent-green/30 transition-colors"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-bold truncate font-display text-text-primary uppercase tracking-tight">
-                  {user.username || 'Citizen'}
-                </p>
-                <p className="text-[8px] text-text-subtle truncate font-mono uppercase tracking-widest">
-                  {user.country ? `🇮🇳 ${user.country}` : 'Global'}
-                </p>
-              </div>
-            </Link>
-
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center space-x-2.5 px-3 py-1.5 rounded-lg text-accent-red hover:bg-accent-red/5 border border-transparent hover:border-accent-red/10 transition-all text-[9px] font-mono font-black uppercase tracking-widest"
-            >
-              <LogOut size={12} />
-              <span>Sign Out</span>
-            </button>
+        <div className="space-y-3">
+          {/* System Status */}
+          <div className="px-2.5 py-2 rounded-sm bg-white/[0.01] border border-white/[0.03] space-y-1.5">
+            <div className="flex items-center justify-between text-[7px] font-mono uppercase tracking-widest text-text-muted/40">
+              <span>System Status</span>
+              <span className="text-accent-green animate-pulse">Nominal</span>
+            </div>
+            <div className="h-0.5 w-full bg-white/[0.03] overflow-hidden rounded-full">
+              <div className="h-full bg-accent-green/40 w-[92%]" />
+            </div>
           </div>
-        )}
+
+          {user && (
+            <div className="border-t border-white/[0.04] pt-3 space-y-1.5">
+              <Link to="/profile" className="flex items-center space-x-2.5 px-2 py-1.5 hover:bg-white/[0.02] rounded-sm transition-colors group">
+                <img
+                  src={user.avatarUrl || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.username}`}
+                  alt="Avatar"
+                  className="w-6 h-6 rounded-sm border border-white/[0.08] bg-bg-card group-hover:border-accent-green/30 transition-colors"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[9px] font-bold truncate font-display text-text-primary uppercase tracking-tight">
+                    {user.username || 'Citizen'}
+                  </p>
+                  <p className="text-[7.5px] text-text-muted/50 truncate font-mono uppercase tracking-[0.1em]">
+                    {user.country ? `Node: ${user.country}` : 'Global Node'}
+                  </p>
+                </div>
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded-sm text-accent-red/80 hover:text-accent-red hover:bg-accent-red/5 border border-transparent hover:border-accent-red/10 transition-all text-[8px] font-mono font-bold uppercase tracking-[0.15em]"
+              >
+                <LogOut size={10} />
+                <span>Termination</span>
+              </button>
+            </div>
+          )}
+        </div>
       </aside>
 
       {/* Main Content Pane */}
-      <main className="flex-1 flex flex-col overflow-y-auto min-w-0 bg-[#050A0E]">
-        <div className="flex-1 p-3 md:p-4 lg:p-5">
+      <main className="flex-1 flex flex-col overflow-y-auto min-w-0 bg-bg-primary relative">
+        {/* Subtle grid background overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+        
+        <div className="flex-1 p-3 md:p-4 lg:p-5 relative z-10">
           {children}
         </div>
       </main>

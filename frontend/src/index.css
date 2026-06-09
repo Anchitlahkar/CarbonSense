@@ -20,7 +20,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-bold tracking-tight text-text-primary uppercase;
+    @apply font-display font-bold tracking-tight text-text-primary;
   }
 
   /* Keyboard focus outline rule */
@@ -31,10 +31,10 @@
 
 @layer utilities {
   .border-subtle {
-    border-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(123, 167, 196, 0.1);
   }
   .bg-primary-surface {
-    background-color: #0B1220;
+    background-color: #0A1628;
   }
 }
 

@@ -3,9 +3,9 @@ import useCarbonStore from '../store/carbonStore';
 import { 
   Panel, 
   SectionHeader, 
-  Skeleton, 
   PanelError,
-  IntelligenceBrief
+  IntelligenceBrief,
+  PremiumLoader
 } from '../components/ui';
 import PlanetTwinScene from '../components/3d/PlanetTwinScene';
 import { 
@@ -17,7 +17,8 @@ import {
   Shield,
   Gauge,
   Activity,
-  Car
+  Car,
+  Database
 } from 'lucide-react';
 
 type ScenarioMode = 'current' | 'optimized' | 'aggressive';
@@ -39,22 +40,8 @@ export const PlanetTwin: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 max-w-6xl mx-auto font-body">
-        <div className="flex justify-between items-center pb-2 border-b border-white/[0.06]">
-          <Skeleton className="h-5 w-48" />
-          <Skeleton className="h-6 w-32" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div className="lg:col-span-8">
-            <Skeleton className="h-[320px] w-full" />
-          </div>
-          <div className="lg:col-span-4 space-y-3">
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-16 w-full" />
-          </div>
-        </div>
-        <Skeleton className="h-32 w-full" />
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <PremiumLoader label="SIMULATING PLANETARY DYNAMICS..." />
       </div>
     );
   }
@@ -87,7 +74,6 @@ export const PlanetTwin: React.FC = () => {
 
   const currentAnnualTons = (planetTwinProfile.currentWorld.trajectory.annualEmissionsKg / 1000).toFixed(2);
   const optimizedAnnualTons = (planetTwinProfile.optimizedWorld.trajectory.annualEmissionsKg / 1000).toFixed(2);
-  const aggressiveAnnualTons = (planetTwinProfile.aggressiveWorld.trajectory.annualEmissionsKg / 1000).toFixed(2);
 
   // Compute Delta Text & Value
   const deltaValue = useMemo(() => {
@@ -113,48 +99,48 @@ export const PlanetTwin: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-3 font-body">
+    <div className="max-w-7xl mx-auto space-y-2.5 font-body">
       {/* 1. Page Header */}
       <SectionHeader 
         title="PLANET TWIN SIMULATION"
         description="Physically-based simulation modeling atmospheric and biospheric feedback of carbon pathways."
         actions={
-          <div className="flex items-center space-x-2 text-[8px] font-mono text-text-subtle">
-            <span className="uppercase tracking-widest">Confidence: <strong className="text-accent-green">94%</strong></span>
-            <span className="border-l border-white/10 pl-2 uppercase tracking-widest">Telemetry: <strong>ACTIVE</strong></span>
+          <div className="flex items-center space-x-2 text-[7.5px] font-mono text-text-muted/60">
+            <span className="uppercase tracking-[0.2em] font-bold">Confidence: <strong className="text-accent-green/60">94%</strong></span>
+            <span className="border-l border-white/[0.04] pl-2 uppercase tracking-[0.2em] font-bold">Telemetry: <strong className="text-accent-blue/60">ACTIVE</strong></span>
           </div>
         }
       />
 
       {/* 2. Top Layer: Scenario Selector */}
-      <Panel level={2} compact className="py-2 px-3 flex flex-wrap items-center justify-between gap-3">
+      <Panel level={2} compact className="py-1.5 px-2.5 flex flex-wrap items-center justify-between gap-3 bg-bg-surface/60 border-white/[0.03]">
         <div className="flex items-center space-x-2">
-          <Gauge className="w-3 h-3 text-accent-blue" />
-          <span className="text-[9px] font-bold text-text-primary uppercase tracking-widest font-display">
+          <Gauge className="w-3 h-3 text-accent-blue opacity-70" />
+          <span className="text-[8px] font-bold text-text-muted/60 uppercase tracking-[0.2em] font-mono">
             Simulation Scenario Mode
           </span>
         </div>
-        <div className="flex bg-bg-card border border-white/[0.04] rounded p-0.5 space-x-0.5 font-mono text-[8px]">
+        <div className="flex bg-bg-card/40 border border-white/[0.04] rounded-sm p-0.5 space-x-0.5 font-mono text-[8px]">
           <button
             onClick={() => setScenario('current')}
-            className={`px-2.5 py-1 rounded transition-colors font-bold uppercase tracking-tight ${
-              scenario === 'current' ? 'bg-accent-red text-white' : 'text-text-muted hover:text-white'
+            className={`px-3 py-1 rounded-sm transition-all duration-200 font-bold uppercase tracking-tight ${
+              scenario === 'current' ? 'bg-accent-red text-white shadow-[0_0_15px_-5px_#FF3366]' : 'text-text-muted/40 hover:text-text-primary/70'
             }`}
           >
             Current Trajectory
           </button>
           <button
             onClick={() => setScenario('optimized')}
-            className={`px-2.5 py-1 rounded transition-colors font-bold uppercase tracking-tight ${
-              scenario === 'optimized' ? 'bg-accent-blue text-white' : 'text-text-muted hover:text-white'
+            className={`px-3 py-1 rounded-sm transition-all duration-200 font-bold uppercase tracking-tight ${
+              scenario === 'optimized' ? 'bg-accent-blue text-white shadow-[0_0_15px_-5px_#00D4FF]' : 'text-text-muted/40 hover:text-text-primary/70'
             }`}
           >
             Optimized Pathway
           </button>
           <button
             onClick={() => setScenario('aggressive')}
-            className={`px-2.5 py-1 rounded transition-colors font-bold uppercase tracking-tight ${
-              scenario === 'aggressive' ? 'bg-accent-green text-bg-primary' : 'text-text-muted hover:text-white'
+            className={`px-3 py-1 rounded-sm transition-all duration-200 font-bold uppercase tracking-tight ${
+              scenario === 'aggressive' ? 'bg-accent-green text-bg-primary shadow-[0_0_15px_-5px_#00FF87]' : 'text-text-muted/40 hover:text-text-primary/70'
             }`}
           >
             Aggressive Recovery
@@ -163,130 +149,139 @@ export const PlanetTwin: React.FC = () => {
       </Panel>
 
       {/* 3. Center Section: 3D Globe + Key Delta (Hero Area) & Right Telemetry Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
         {/* Globe Visualization Area */}
-        <Panel level={1} className="lg:col-span-8 relative flex flex-col justify-between min-h-[340px] p-3">
-          <div className="absolute top-2.5 left-2.5 z-10 flex items-center space-x-1.5">
-            <Globe className="text-text-muted animate-spin-slow w-3 h-3" />
-            <span className="text-[8px] font-mono text-text-muted uppercase tracking-[0.2em]">
-              SIM_OUTPUT_RENDER_V1.5
+        <Panel level={1} className="lg:col-span-8 relative flex flex-col justify-between min-h-[360px] p-3 overflow-hidden">
+          {/* Subtle scanner effect overlay */}
+          <div className="absolute inset-0 pointer-events-none z-10 opacity-[0.02] bg-[linear-gradient(to_bottom,transparent_50%,#fff_50%)] bg-[size:100%_4px]" />
+          
+          <div className="absolute top-2.5 left-2.5 z-20 flex items-center space-x-1.5 bg-bg-surface/40 backdrop-blur-md px-2 py-1 border border-white/[0.04] rounded-sm">
+            <Globe className="text-accent-blue animate-spin-slow w-2.5 h-2.5" />
+            <span className="text-[7.5px] font-mono text-text-muted/70 uppercase tracking-[0.2em] font-bold">
+              SIM_DATA_ENGINE_V1.6
             </span>
           </div>
 
           {/* Floating Key Delta (Hero Visual) */}
-          <div className="absolute top-2.5 right-2.5 z-10 bg-bg-card/80 border border-white/[0.08] px-2 py-1 rounded flex flex-col text-right backdrop-blur font-mono">
-            <span className="text-[7px] text-text-subtle uppercase tracking-widest">Scenario Target</span>
-            <span className={`text-xs font-bold tracking-tight ${
-              scenario === 'current' ? 'text-accent-red' : scenario === 'optimized' ? 'text-accent-blue' : 'text-accent-green'
+          <div className="absolute top-2.5 right-2.5 z-20 bg-bg-card/80 border border-white/[0.08] px-2 py-1 rounded-sm flex flex-col text-right backdrop-blur-md font-mono">
+            <span className="text-[6.5px] text-text-muted/40 uppercase tracking-[0.2em] font-bold">Target Offset</span>
+            <span className={`text-[11px] font-black tracking-tight uppercase ${
+              scenario === 'current' ? 'text-accent-red/80' : scenario === 'optimized' ? 'text-accent-blue/80' : 'text-accent-green/80'
             }`}>
               {deltaValue}
             </span>
           </div>
 
           {/* Center 3D Canvas */}
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center relative">
             <PlanetTwinScene scenario={scenario} />
+            {/* Compass overlay */}
+            <div className="absolute bottom-4 right-4 flex flex-col items-center opacity-20 pointer-events-none">
+              <Compass className="w-8 h-8 text-text-muted" />
+              <span className="text-[6px] font-mono mt-1">AXIS_Y_LOCKED</span>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between text-[7px] font-mono text-text-subtle pt-1.5 border-t border-white/[0.04] uppercase tracking-widest">
-            <span>Volumetric clouds: <strong>ACTIVE</strong></span>
-            <span>Haze density: <strong>{(scenario === 'current' ? 0.55 : scenario === 'optimized' ? 0.4 : 0.25) * 100}%</strong></span>
+          <div className="flex items-center justify-between text-[7px] font-mono text-text-muted/30 pt-1.5 border-t border-white/[0.04] uppercase tracking-[0.15em] relative z-20">
+            <span>Atmospheric density: <strong className="text-text-muted/60">{(scenario === 'current' ? 0.55 : scenario === 'optimized' ? 0.4 : 0.25) * 100}%</strong></span>
+            <span>Biosphere: <strong className="text-text-muted/60">STABLE</strong></span>
+            <span>Kernel: <strong className="text-text-muted/60">r165.x</strong></span>
           </div>
         </Panel>
 
         {/* Right Section: Divergence Metrics */}
-        <div className="lg:col-span-4 grid grid-cols-1 gap-2">
+        <div className="lg:col-span-4 grid grid-cols-1 gap-1.5">
           {/* Annual Emissions */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40 group-hover:text-text-primary transition-colors">
                 <Activity size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Annual Emissions</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Annual Telemetry</span>
               </div>
             </div>
-            <span className="text-xs font-mono font-bold text-text-primary">
-              {currentAnnualTonsVal} <span className="text-[8px] text-text-muted font-normal uppercase">t CO₂e</span>
+            <span className="text-[11px] font-mono font-black text-text-primary/90">
+              {currentAnnualTonsVal} <span className="text-[7px] text-text-muted/40 font-bold uppercase">t CO₂e</span>
             </span>
           </Panel>
 
           {/* Temp Impact */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40">
                 <Thermometer size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Temp Delta</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Thermal Drift</span>
               </div>
             </div>
-            <span className={`text-xs font-mono font-bold ${
-              scenario === 'current' ? 'text-accent-red' : scenario === 'optimized' ? 'text-accent-blue' : 'text-accent-green'
+            <span className={`text-[11px] font-mono font-black ${
+              scenario === 'current' ? 'text-accent-red/80' : scenario === 'optimized' ? 'text-accent-blue/80' : 'text-accent-green/80'
             }`}>
               +{scenario === 'current' ? '2.1' : scenario === 'optimized' ? '1.7' : '1.3'}°C
             </span>
           </Panel>
 
           {/* Atmospheric concentration */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
-                <Compass size={12} />
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40">
+                <Database size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Atmospheric PPM</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Carbon Density</span>
               </div>
             </div>
-            <span className="text-xs font-mono font-bold text-text-primary">
-              {scenario === 'current' ? '418' : scenario === 'optimized' ? '385' : '360'} <span className="text-[8px] text-text-muted font-normal uppercase">PPM</span>
+            <span className="text-[11px] font-mono font-black text-text-primary/90">
+              {scenario === 'current' ? '418' : scenario === 'optimized' ? '385' : '360'} <span className="text-[7px] text-text-muted/40 font-bold uppercase">PPM</span>
             </span>
           </Panel>
 
           {/* Forest Offset */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40">
                 <Trees size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Forest Demand</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Forest Area</span>
               </div>
             </div>
-            <span className="text-xs font-mono font-bold text-text-primary">
-              {activeWorld.impact.treesRequiredForOffset.toLocaleString()} <span className="text-[8px] text-text-muted font-normal uppercase">Hectares</span>
+            <span className="text-[11px] font-mono font-black text-text-primary/90">
+              {activeWorld.impact.treesRequiredForOffset.toLocaleString()} <span className="text-[7px] text-text-muted/40 font-bold uppercase">HA</span>
             </span>
           </Panel>
 
           {/* Vehicle Reduction */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40">
                 <Car size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Vehicle Offset</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Vehicle Offset</span>
               </div>
             </div>
-            <span className="text-xs font-mono font-bold text-text-primary">
-              {(activeWorld.impact.vehicleEquivalentKm / 1000).toFixed(1)}k <span className="text-[8px] text-text-muted font-normal uppercase">KM</span>
+            <span className="text-[11px] font-mono font-black text-text-primary/90">
+              {(activeWorld.impact.vehicleEquivalentKm / 1000).toFixed(1)}k <span className="text-[7px] text-text-muted/40 font-bold uppercase">KM</span>
             </span>
           </Panel>
 
           {/* Earth Overshoot */}
-          <Panel level={2} compact className="flex items-center justify-between h-fit py-2">
+          <Panel level={2} compact className="flex items-center justify-between h-fit py-1.5 border-white/[0.03]">
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-text-muted">
-                <Globe size={12} />
+              <div className="w-6 h-6 rounded-sm bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-muted/40">
+                <Shield size={12} />
               </div>
               <div>
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-tighter">Overshoot</span>
+                <span className="text-[7.5px] font-mono text-text-muted/40 block uppercase tracking-widest font-bold">Earth Index</span>
               </div>
             </div>
-            <span className={`text-xs font-mono font-bold ${
-              activeWorld.earthEquivalent.earthsRequired > 1.5 ? 'text-accent-amber' : 'text-accent-green'
+            <span className={`text-[11px] font-mono font-black ${
+              activeWorld.earthEquivalent.earthsRequired > 1.5 ? 'text-accent-amber/80' : 'text-accent-green/80'
             }`}>
-              {activeWorld.earthEquivalent.earthsRequired.toFixed(1)} <span className="text-[8px] text-text-muted font-normal uppercase">Earths</span>
+              {activeWorld.earthEquivalent.earthsRequired.toFixed(1)} <span className="text-[7px] text-text-muted/40 font-bold uppercase">EARTHS</span>
             </span>
           </Panel>
         </div>

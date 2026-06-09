@@ -12,7 +12,6 @@ import {
   FileImage, 
   ScanLine, 
   CheckCircle, 
-  AlertTriangle,
   Cpu, 
   ShieldAlert
 } from 'lucide-react';
@@ -151,27 +150,27 @@ export const Scanner: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-3 font-body">
+    <div className="max-w-7xl mx-auto space-y-2.5 font-body">
       {/* Page Header */}
       <SectionHeader
         title="RECEIPT SCANNER"
         description="OCR purchase document extraction engine compiling line-item carbon footprints."
         actions={
-          <div className="flex items-center space-x-2 text-[8px] font-mono text-text-subtle">
-            <ScanLine size={11} className="text-accent-blue" />
-            <span className="uppercase tracking-widest">OCR_READER_V1.5_X</span>
+          <div className="flex items-center space-x-2 text-[7.5px] font-mono text-text-muted/60">
+            <ScanLine size={11} className="text-accent-blue/60" />
+            <span className="uppercase tracking-[0.2em] font-bold">OCR_READER_V1.6_X</span>
           </div>
         }
       />
 
       {/* Main Grid: Selector & Results */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5">
         
         {/* Left: Drag Drop Selection Zone */}
         <div className="lg:col-span-4 space-y-2.5">
           <div className="flex items-center space-x-1.5 pl-1">
-            <Upload size={12} className="text-text-muted" />
-            <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest font-display">
+            <Upload size={12} className="text-text-muted/40" />
+            <span className="text-[8px] font-bold text-text-muted/60 uppercase tracking-[0.2em] font-mono">
               Input Document
             </span>
           </div>
@@ -180,7 +179,7 @@ export const Scanner: React.FC = () => {
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="border border-dashed border-white/[0.04] hover:border-white/[0.12] bg-[#070D18] rounded-lg p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[160px]"
+            className="border border-dashed border-white/[0.08] hover:border-accent-blue/30 bg-bg-surface/40 rounded-sm p-5 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[180px] group shadow-xl"
           >
             <input
               ref={fileInputRef}
@@ -190,24 +189,24 @@ export const Scanner: React.FC = () => {
               className="hidden"
             />
             {preview ? (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 <img
                   src={preview}
                   alt="Receipt Preview"
-                  className="max-h-[100px] mx-auto rounded border border-white/[0.06] grayscale contrast-125"
+                  className="max-h-[120px] mx-auto rounded-sm border border-white/[0.1] grayscale hover:grayscale-0 transition-all duration-500 shadow-2xl"
                 />
-                <p className="text-[8px] font-mono text-text-muted truncate max-w-[140px] uppercase">
+                <p className="text-[7.5px] font-mono text-text-muted/40 truncate max-w-[160px] uppercase font-black tracking-widest">
                   {file?.name}
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
-                <div className="w-7 h-7 rounded bg-white/[0.01] border border-white/[0.04] flex items-center justify-center text-text-subtle mx-auto">
-                  <FileImage size={14} />
+              <div className="space-y-3">
+                <div className="w-8 h-8 rounded-sm bg-white/[0.02] border border-white/[0.06] flex items-center justify-center text-text-muted/30 mx-auto group-hover:text-accent-blue transition-colors group-hover:border-accent-blue/40">
+                  <FileImage size={16} />
                 </div>
-                <div className="space-y-0.5">
-                  <p className="text-[10px] font-bold text-text-primary uppercase tracking-tight">Push to Upload</p>
-                  <p className="text-[8px] text-text-muted font-mono uppercase">JPEG/PNG/WEBP (5MB)</p>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black text-text-primary/70 uppercase tracking-widest group-hover:text-text-primary transition-colors">Select Payload</p>
+                  <p className="text-[7px] text-text-muted/30 font-mono uppercase tracking-tighter">JPEG/PNG/WEBP (5MB MAX)</p>
                 </div>
               </div>
             )}
@@ -217,7 +216,7 @@ export const Scanner: React.FC = () => {
             <button
               onClick={triggerUpload}
               disabled={isLoading}
-              className="w-full py-2 rounded bg-accent-green hover:bg-accent-green/90 text-bg-primary font-mono font-black text-[10px] tracking-[0.2em] transition-all disabled:opacity-50 uppercase cursor-pointer"
+              className="w-full py-2 rounded-sm bg-accent-green text-bg-primary font-mono font-black text-[10px] tracking-[0.25em] transition-all disabled:opacity-30 uppercase cursor-pointer shadow-[0_0_20px_-5px_#00FF87]"
             >
               {isLoading ? 'ANALYZING...' : 'RUN_OCR_EXTRACTION'}
             </button>
@@ -229,8 +228,8 @@ export const Scanner: React.FC = () => {
         {/* Right: Telemetry Results Panel */}
         <div className="lg:col-span-8 space-y-2.5">
           <div className="flex items-center space-x-1.5 pl-1">
-            <CheckCircle size={12} className="text-text-muted" />
-            <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest font-display">
+            <CheckCircle size={12} className="text-accent-green opacity-60" />
+            <span className="text-[8px] font-bold text-text-muted/60 uppercase tracking-[0.2em] font-mono">
               Extraction Telemetry
             </span>
           </div>
@@ -238,14 +237,14 @@ export const Scanner: React.FC = () => {
           {isLoading ? (
             <div className="space-y-2">
               <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-40 w-full" />
+              <Skeleton className="h-48 w-full" />
             </div>
           ) : result ? (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               
               {/* OCR Data Table */}
-              <div className="space-y-1">
-                <span className="text-[8px] font-mono text-text-subtle block uppercase tracking-widest">// EXTRACTED_ITEMS_MAP</span>
+              <div className="space-y-1.5">
+                <span className="text-[7.5px] font-mono text-text-muted/30 block uppercase tracking-[0.25em] font-black">// EXTRACTED_ITEMS_MAP</span>
                 <DataTable<ScannedReceiptItem>
                   columns={columns}
                   data={result.items}
@@ -255,26 +254,26 @@ export const Scanner: React.FC = () => {
               </div>
 
               {/* Grid: AI Validation & Usage Metrics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 
                 {/* AI Validation */}
-                <Panel level={3} compact className="space-y-2 p-3">
-                  <h4 className="text-[9px] font-bold text-text-primary font-mono uppercase tracking-widest border-b border-white/[0.04] pb-1 flex items-center space-x-1.5">
-                    <ShieldAlert size={11} className="text-accent-amber" />
+                <Panel level={3} compact className="space-y-2 p-3 bg-bg-surface/50 border-white/[0.04]">
+                  <h4 className="text-[8.5px] font-bold text-text-muted/80 font-mono uppercase tracking-[0.2em] border-b border-white/[0.04] pb-1.5 flex items-center space-x-1.5">
+                    <ShieldAlert size={11} className="text-accent-amber opacity-60" />
                     <span>OCR Validation</span>
                   </h4>
-                  <div className="space-y-1.5 font-mono">
-                    <div className="flex justify-between text-[8px] text-text-muted uppercase">
+                  <div className="space-y-2 font-mono">
+                    <div className="flex justify-between text-[7.5px] text-text-muted/50 uppercase font-black">
                       <span>Integrity Index</span>
-                      <span className="text-text-primary font-bold">{(result.validation.confidence * 100).toFixed(0)}%</span>
+                      <span className="text-text-primary/70">{(result.validation.confidence * 100).toFixed(0)}%</span>
                     </div>
                     {result.validation.missingFields.length > 0 && (
-                      <div className="text-[7px] font-mono text-accent-amber bg-accent-amber/5 border border-accent-amber/10 p-1 rounded uppercase tracking-tighter">
+                      <div className="text-[7px] font-mono text-accent-amber bg-accent-amber/5 border border-accent-amber/10 p-1 rounded-sm uppercase tracking-tighter font-bold">
                         Missing: {result.validation.missingFields.join(', ')}
                       </div>
                     )}
                     {!result.validation.requiresReview && (
-                      <div className="text-[7px] font-mono text-accent-green bg-accent-green/5 border border-accent-green/10 p-1 rounded flex items-center space-x-1 uppercase tracking-tighter">
+                      <div className="text-[7px] font-mono text-accent-green bg-accent-green/5 border border-accent-green/10 p-1 rounded-sm flex items-center space-x-1.5 uppercase tracking-tighter font-black opacity-80">
                         <CheckCircle size={9} />
                         <span>OCR verification approved.</span>
                       </div>
@@ -283,32 +282,32 @@ export const Scanner: React.FC = () => {
                 </Panel>
 
                 {/* Audit Performance Panel */}
-                <Panel level={3} compact className="space-y-2 p-3">
-                  <h4 className="text-[9px] font-bold text-text-primary font-mono uppercase tracking-widest border-b border-white/[0.04] pb-1 flex items-center space-x-1.5">
-                    <Cpu size={11} className="text-accent-blue" />
-                    <span>Model Performance</span>
+                <Panel level={3} compact className="space-y-2 p-3 bg-bg-surface/50 border-white/[0.04]">
+                  <h4 className="text-[8.5px] font-bold text-text-muted/80 font-mono uppercase tracking-[0.2em] border-b border-white/[0.04] pb-1.5 flex items-center space-x-1.5">
+                    <Cpu size={11} className="text-accent-blue opacity-60" />
+                    <span>Inference Meta</span>
                   </h4>
-                  <div className="space-y-1 font-mono text-[8px] text-text-muted uppercase tracking-tighter">
+                  <div className="space-y-1 font-mono text-[7.5px] text-text-muted/50 uppercase tracking-tighter font-black">
                     <div className="flex justify-between">
-                      <span>RUN_ID</span>
-                      <span className="text-text-primary truncate max-w-[100px]">{result.usageMetrics.model}</span>
+                      <span className="text-text-muted/30">RUN_ID</span>
+                      <span className="text-text-primary/70 truncate max-w-[120px]">{result.usageMetrics.model}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>LATENCY</span>
-                      <span className="text-text-primary">{result.usageMetrics.latencyMs}ms</span>
+                      <span className="text-text-muted/30">LATENCY</span>
+                      <span className="text-text-primary/70">{result.usageMetrics.latencyMs}ms</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>COST_EST</span>
-                      <span className="text-accent-green font-bold">${result.usageMetrics.estimatedCostUsd.toFixed(5)}</span>
+                      <span className="text-text-muted/30">COST_EST</span>
+                      <span className="text-accent-green/80">${result.usageMetrics.estimatedCostUsd.toFixed(5)}</span>
                     </div>
                   </div>
                 </Panel>
               </div>
             </div>
           ) : (
-            <Panel level={2} className="p-10 text-center text-[9px] text-text-subtle font-mono min-h-[160px] flex flex-col items-center justify-center space-y-2 uppercase tracking-widest bg-[#070D18] border-white/[0.02]">
-              <ScanLine size={18} className="text-text-subtle/30" />
-              <span>Select document to trigger OCR telemetry extraction.</span>
+            <Panel level={2} className="p-12 text-center text-[8.5px] text-text-muted/20 font-mono min-h-[200px] flex flex-col items-center justify-center space-y-3 uppercase tracking-[0.25em] bg-bg-surface/30 border-white/[0.02] shadow-inner">
+              <ScanLine size={24} className="text-text-muted/10" />
+              <span>Pending Telemetry Acquisition</span>
             </Panel>
           )}
         </div>
