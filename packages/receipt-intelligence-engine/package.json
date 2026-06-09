@@ -10,6 +10,7 @@
   "dependencies": {
     "@carbonsense/core": "*",
     "@carbonsense/shared-types": "*",
-    "@carbonsense/ai-orchestration": "*"
+    "@carbonsense/ai-orchestration": "*",
+    "@carbonsense/carbon-science-engine": "*"
   }
 }

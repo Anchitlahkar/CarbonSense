@@ -9,6 +9,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "npm run dev",
     "install:all": "npm install",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",

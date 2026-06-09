@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@carbonsense/core": "*",
-    "@carbonsense/shared-types": "*"
+    "@carbonsense/shared-types": "*",
+    "@google/generative-ai": "^0.24.1"
   }
 }

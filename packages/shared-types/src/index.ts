@@ -122,6 +122,7 @@ export interface OptimizationCandidate {
   resistanceScore: BehaviorResistanceScore;
   score: number; // MCDA score
   reasoning: string;
+  rank: number;
 }
 
 export interface OptimizationTradeoff {
@@ -143,13 +144,75 @@ export interface OptimizationPlan {
 
 
 // 7. Carbon DNA Profile
+export enum CarbonArchetype {
+  TransportDominant = 'TransportDominant',
+  FoodDominant = 'FoodDominant',
+  EnergyDominant = 'EnergyDominant',
+  ShoppingDominant = 'ShoppingDominant',
+  BalancedOptimizer = 'BalancedOptimizer',
+  HighImpactReducer = 'HighImpactReducer',
+  StableLowEmitter = 'StableLowEmitter',
+  VolatileEmitter = 'VolatileEmitter',
+  ResistantEmitter = 'ResistantEmitter'
+}
+
+export enum DNAEvolutionDirection {
+  RapidImprovement = 'RapidImprovement',
+  Improving = 'Improving',
+  Stable = 'Stable',
+  Degrading = 'Degrading',
+  RapidDegradation = 'RapidDegradation'
+}
+
+export interface DNADimensions {
+  emissionIntensity: number; // 0 to 100
+  behaviorVolatility: number; // 0 to 100
+  optimizationReadiness: number; // 0 to 100
+  interventionResistance: number; // 0 to 100
+  forecastReliability: number; // 0 to 100
+}
+
+export interface ArchetypeEvidence {
+  factor: string;
+  contribution: number; // 0 to 100
+  reasoning: string;
+}
+
+export interface FutureDNAProjection {
+  currentArchetype: CarbonArchetype;
+  projectedArchetype: CarbonArchetype;
+  probability: number; // 0.0 to 1.0
+  reasoning: string[];
+}
+
+export interface DNAEvolution {
+  direction: DNAEvolutionDirection;
+  projected30dChangePercent: number;
+  projected90dChangePercent: number;
+  confidenceScore: number; // 0 to 100
+  reasoning: string;
+  futureProjection: FutureDNAProjection;
+}
+
 export interface CarbonDNAProfile {
   id: string;
   userId: string;
-  carbonPersonaType: string; // e.g., 'High Flyer', 'Eco Enthusiast', 'Urban Commuter'
+  
+  /** @deprecated Use archetype instead */
+  carbonPersonaType: string;
+  /** @deprecated Derived from behaviorProfile featureVector instead */
   primaryCategory: CarbonCategory;
-  primaryEmissionsRatio: number; // e.g., 0.65 for 65% of emissions
-  behavioralScore: number; // 0-100 score
+  /** @deprecated Derived from behaviorProfile featureVector instead */
+  primaryEmissionsRatio: number;
+  /** @deprecated Use dimensions.behaviorVolatility instead */
+  behavioralScore: number;
+  
+  archetype: CarbonArchetype;
+  archetypeConfidence: number; // 0 to 100
+  dimensions: DNADimensions;
+  archetypeEvidence: ArchetypeEvidence[];
+  evolution: DNAEvolution;
+  
   lastUpdated: Date;
 }
 
@@ -162,6 +225,90 @@ export interface SimulationState {
   forestCoverHectares: number;
   glacierMeltdownPercentage: number;
   computedAt: Date;
+}
+
+export interface PlanetHealthIndex {
+  score: number; // 0-100
+  emissionsComponent: number;
+  sustainabilityComponent: number;
+  optimizationComponent: number;
+  reasoning: string[];
+}
+
+export interface WorldSnapshot {
+  day: number;
+  cumulativeEmissionsKg: number;
+  healthIndex: number;
+}
+
+export interface TwinTrajectory {
+  annualEmissionsKg: number;
+  cumulative30DayKg: number;
+  cumulative90DayKg: number;
+  cumulative365DayKg: number;
+  confidence: number;
+  snapshots: WorldSnapshot[];
+}
+
+export interface ImpactProjection {
+  cumulativeEmissionsKg: number;
+  treesRequiredForOffset: number;
+  vehicleEquivalentKm: number;
+  householdEnergyEquivalentDays: number;
+}
+
+export interface EarthEquivalent {
+  earthsRequired: number;
+  globalPercentile: number;
+  populationEquivalent: number;
+}
+
+export interface NarrativeEvidence {
+  metric: string;
+  value: number;
+  reason: string;
+}
+
+export interface PlanetTwinNarrative {
+  title: string;
+  summary: string;
+  keyChanges: string[];
+  evidence: NarrativeEvidence[];
+}
+
+export interface TwinWorld {
+  id: string;
+  name: string;
+  trajectory: TwinTrajectory;
+  impact: ImpactProjection;
+  earthEquivalent: EarthEquivalent;
+  dnaProjection: FutureDNAProjection;
+  narrative: PlanetTwinNarrative;
+  healthIndex: PlanetHealthIndex;
+}
+
+export interface ComparativeAnalysis {
+  reductionVsCurrentKg: number;
+  reductionVsCurrentPercent: number;
+  highestImpactAction: string;
+  highestRiskDriver: string;
+}
+
+export interface WorldDivergence {
+  divergenceScore: number;
+  emissionsGapKg: number;
+  sustainabilityGapPercent: number;
+  keyDrivers: string[];
+}
+
+export interface PlanetTwinProfile {
+  userId: string;
+  currentWorld: TwinWorld;
+  optimizedWorld: TwinWorld;
+  aggressiveWorld: TwinWorld;
+  comparativeAnalysis: ComparativeAnalysis;
+  worldDivergence: WorldDivergence;
+  generatedAt: string;
 }
 
 // 9. Scientific Reference
@@ -348,3 +495,68 @@ export interface PlanetTwinUpdatedPayload {
   simulationState: SimulationState;
 }
 export type PlanetTwinUpdatedEvent = DomainEvent<PlanetTwinUpdatedPayload>;
+
+// --- AI Orchestration, Receipt Intelligence & AI Coach Upgrades ---
+
+export interface AIUsageMetrics {
+  provider: string;
+  model: string;
+  promptTokens: number;
+  completionTokens: number;
+  estimatedCostUsd: number;
+  latencyMs: number;
+}
+
+export interface ExtractionValidation {
+  confidence: number;
+  missingFields: string[];
+  suspiciousFields: string[];
+  requiresReview: boolean;
+}
+
+export interface ReceiptAudit {
+  extractedItems: number;
+  validatedItems: number;
+  flaggedItems: number;
+  modelUsed: string;
+  processingTimeMs: number;
+}
+
+export interface ReceiptItem {
+  name: string;
+  quantity: number;
+  unit: string;
+  category: CarbonCategory;
+  subCategory: string;
+  estimatedCarbonKg: number;
+  confidence: number;
+}
+
+export interface ReceiptAnalysisResult {
+  items: ReceiptItem[];
+  totalCarbonKg: number;
+  confidence: number;
+  validation: ExtractionValidation;
+  audit: ReceiptAudit;
+  usageMetrics: AIUsageMetrics;
+}
+
+export interface CoachEvidenceBlock {
+  source: string;
+  metric: string;
+  value: string;
+  confidence: number;
+}
+
+export interface CoachResponse {
+  content: string;
+  usageMetrics: AIUsageMetrics;
+  evidence: CoachEvidenceBlock[];
+}
+
+export interface PromptMetadata {
+  version: string;
+  owner: string;
+  updated: string;
+}
+

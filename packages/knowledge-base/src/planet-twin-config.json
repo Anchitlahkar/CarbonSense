@@ -1,0 +1,8 @@
+{
+  "snapshotIntervals": [30, 90, 180, 365],
+  "healthWeights": {
+    "emissions": 0.5,
+    "sustainability": 0.3,
+    "optimization": 0.2
+  }
+}

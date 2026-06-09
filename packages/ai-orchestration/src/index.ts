@@ -1,4 +1,5 @@
 import { Result } from '@carbonsense/core';
+import { AIUsageMetrics } from '@carbonsense/shared-types';
 
 export interface AIModelOptions {
   temperature?: number;
@@ -7,25 +8,58 @@ export interface AIModelOptions {
   systemInstruction?: string;
 }
 
-export interface AIOrchestrationService {
-  /**
-   * Generates a standard text completion
-   */
-  generateText(prompt: string, options?: AIModelOptions): Promise<Result<string>>;
+export interface ModelProvider {
+  name: string;
+  generateText(
+    prompt: string,
+    options?: AIModelOptions
+  ): Promise<Result<{ text: string; usageMetrics: AIUsageMetrics }>>;
 
-  /**
-   * Generates structured JSON adhering to a target schema
-   */
-  generateJson<T>(prompt: string, schema?: any, options?: AIModelOptions): Promise<Result<T>>;
+  generateJson<T>(
+    prompt: string,
+    schema?: any,
+    options?: AIModelOptions
+  ): Promise<Result<{ data: T; usageMetrics: AIUsageMetrics }>>;
 
-  /**
-   * Analyzes multi-modal input (such as an uploaded image of a receipt or utility bill)
-   */
   analyzeImage<T>(
     imageBuffer: Buffer,
     mimeType: string,
     prompt: string,
     schema?: any,
     options?: AIModelOptions
-  ): Promise<Result<T>>;
+  ): Promise<Result<{ data: T; usageMetrics: AIUsageMetrics }>>;
 }
+
+export class ProviderRegistry {
+  private providers = new Map<string, ModelProvider>();
+  private defaultProviderName: string = '';
+
+  public register(provider: ModelProvider, isDefault = false): void {
+    this.providers.set(provider.name.toLowerCase(), provider);
+    if (isDefault || !this.defaultProviderName) {
+      this.defaultProviderName = provider.name.toLowerCase();
+    }
+  }
+
+  public get(name?: string): ModelProvider {
+    const key = (name || this.defaultProviderName).toLowerCase();
+    const provider = this.providers.get(key);
+    if (!provider) {
+      throw new Error(`AI Model Provider '${key}' is not registered`);
+    }
+    return provider;
+  }
+
+  public list(): string[] {
+    return Array.from(this.providers.keys());
+  }
+}
+
+// Global registry instance
+export const providerRegistry = new ProviderRegistry();
+
+export { GeminiModelProvider } from './GeminiModelProvider';
+export { PromptManager } from './PromptManager';
+export { CostTracker } from './CostTracker';
+export { ResponseValidator } from './ResponseValidator';
+
