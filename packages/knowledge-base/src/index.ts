@@ -5,7 +5,7 @@ import foodJson from './emission-factors/food.json' with { type: 'json' };
 import energyJson from './emission-factors/energy.json' with { type: 'json' };
 import shoppingJson from './emission-factors/shopping.json' with { type: 'json' };
 import referencesJson from './references.json' with { type: 'json' };
-import methodologyJson from './methodologies/CS-METHODOLOGY-V1.0.0.json' with { type: 'json' };
+import methodologyJson from './methodologies/cs-methodology-v1.json' with { type: 'json' };
 import behaviorThresholdsJson from './behavior-thresholds.json' with { type: 'json' };
 import scenarioLibraryJson from './scenario-library.json' with { type: 'json' };
 import interventionsJson from './interventions.json' with { type: 'json' };

@@ -12,6 +12,7 @@
     "@carbonsense/ai-orchestration": "*",
     "@carbonsense/carbon-science-engine": "*",
     "@carbonsense/core": "*",
+    "@carbonsense/knowledge-base": "*",
     "@carbonsense/receipt-intelligence-engine": "*",
     "@carbonsense/shared-types": "*",
     "@supabase/supabase-js": "^2.39.8",

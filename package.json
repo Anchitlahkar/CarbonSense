@@ -15,7 +15,7 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",
     "dev": "concurrently -n \"frontend,backend\" -c \"cyan,magenta\" \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "build:packages": "npm run build --workspace=@carbonsense/core && npm run build --workspace=@carbonsense/shared-types && npm run build --workspace=@carbonsense/knowledge-base && npm run build --workspace=@carbonsense/ai-orchestration && npm run build --workspaces --if-present",
+    "build:packages": "npm run build --workspace=@carbonsense/core --workspace=@carbonsense/shared-types --workspace=@carbonsense/knowledge-base --workspace=@carbonsense/ai-orchestration --workspace=@carbonsense/behavior-intelligence-engine --workspace=@carbonsense/carbon-dna-engine --workspace=@carbonsense/carbon-science-engine --workspace=@carbonsense/forecast-engine --workspace=@carbonsense/optimization-engine --workspace=@carbonsense/planet-twin-engine --workspace=@carbonsense/receipt-intelligence-engine --if-present",
     "build:frontend": "npm run build --workspace=frontend",
     "build:backend": "npm run build --workspace=backend",
     "build": "npm run build:packages && npm run build:backend && npm run build:frontend",

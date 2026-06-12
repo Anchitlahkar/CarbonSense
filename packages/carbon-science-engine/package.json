@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@carbonsense/core": "*",
-    "@carbonsense/shared-types": "*"
+    "@carbonsense/shared-types": "*",
+    "@carbonsense/knowledge-base": "*",
+    "zod": "^3.22.4"
   }
 }
