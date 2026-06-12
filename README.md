@@ -64,6 +64,23 @@ Maximize your score in under 3 minutes by following this high-density flow:
 
 ---
 
+## Graceful AI Fallback
+
+CarbonSense supports both Online and Offline Intelligence Modes.
+
+* **Online Mode**: Uses Gemini for conversational reasoning.
+* **Offline Mode**: Automatically activates when external AI services are unavailable.
+
+Offline recommendations continue using:
+* Carbon DNA Engine
+* Behavior Intelligence Engine
+* Forecast Engine
+* Optimization Engine
+
+No external AI service is required for core recommendation functionality.
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Install Workspace Workspaces
