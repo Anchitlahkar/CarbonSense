@@ -1,4 +1,4 @@
-import { EmissionFactor, ScientificReference, MethodologyMetadata } from '@carbonsense/shared-types';
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       import { EmissionFactor, ScientificReference, MethodologyMetadata } from '@carbonsense/shared-types';
 
 import transportJson from './emission-factors/transport.json' with { type: 'json' };
 import foodJson from './emission-factors/food.json' with { type: 'json' };
@@ -99,6 +99,7 @@ export function getPlanetTwinConfig(): any {
 
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 export interface ParsedPrompt {
   template: string;
@@ -114,23 +115,48 @@ export function getPromptTemplate(
 ): ParsedPrompt {
   const filename = `${name}.md`;
   
-  // Resolve current dir dynamically to support CommonJS output
-  const currentDir = typeof __dirname !== 'undefined' ? __dirname : path.resolve();
+  // Resolve __dirname dynamically in ESM module
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   
-  // Try direct sibling/child path (for dev/test running from src)
-  let filePath = path.join(currentDir, 'prompts', filename);
-  if (!fs.existsSync(filePath)) {
-    // Try going up to project directory (for compiled dist running from dist)
-    filePath = path.join(currentDir, '..', 'src', 'prompts', filename);
+  // Build a candidate list of search paths relative to package layout, monorepo parent folders, and process working directory
+  const pathsToTry: string[] = [
+    path.join(__dirname, 'prompts', filename),
+    path.join(__dirname, '..', 'src', 'prompts', filename),
+    path.join(__dirname, '..', 'prompts', filename)
+  ];
+
+  // Upward directory search candidates (stops at filesystem root)
+  let scanDir = __dirname;
+  while (true) {
+    pathsToTry.push(path.join(scanDir, 'packages', 'knowledge-base', 'src', 'prompts', filename));
+    pathsToTry.push(path.join(scanDir, 'knowledge-base', 'src', 'prompts', filename));
+    pathsToTry.push(path.join(scanDir, 'src', 'prompts', filename));
+    
+    const parentDir = path.dirname(scanDir);
+    if (parentDir === scanDir) {
+      break;
+    }
+    scanDir = parentDir;
+  }
+
+  // Fallback candidate paths relative to current process working directory (monorepo root or package folder context)
+  const cwd = process.cwd();
+  pathsToTry.push(path.join(cwd, 'packages', 'knowledge-base', 'src', 'prompts', filename));
+  pathsToTry.push(path.join(cwd, '..', 'packages', 'knowledge-base', 'src', 'prompts', filename));
+  pathsToTry.push(path.join(cwd, 'src', 'prompts', filename));
+
+  // Find first file candidate that physically exists on the disk
+  let filePath = '';
+  for (const candidate of pathsToTry) {
+    if (fs.existsSync(candidate)) {
+      filePath = candidate;
+      break;
+    }
   }
   
-  // Ultimate fallback to workspace relative path
-  if (!fs.existsSync(filePath)) {
-    filePath = path.resolve('packages', 'knowledge-base', 'src', 'prompts', filename);
-  }
-  
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Prompt file ${filename} not found at path: ${filePath}`);
+  if (!filePath) {
+    throw new Error(`Prompt file ${filename} not found. Attempted candidates:\n${pathsToTry.slice(0, 15).join('\n')}`);
   }
   
   const content = fs.readFileSync(filePath, 'utf-8');
