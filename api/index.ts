@@ -1,11 +1,16 @@
-import { Request, Response } from 'express';
-import app from '../backend/src/index.js';
-
-/**
- * Vercel Serverless Function entrypoint.
- * This function bridges the Express app from the backend to Vercel's serverless environment.
- */
-export default async function handler(req: Request, res: Response) {
-  // Ensure the Express app handles the request/response cycle
-  return app(req, res);
+export default async function handler(req: any, res: any) {
+  try {
+    // Import from the compiled backend dist folder
+    const { app } = await import('../backend/dist/index.js');
+    if (!app) {
+      throw new Error('App not found in backend/dist/index.js');
+    }
+    return app(req, res);
+  } catch (err: any) {
+    return res.status(500).json({
+      error: 'Vercel handler failed',
+      message: err.message,
+      stack: err.stack
+    });
+  }
 }

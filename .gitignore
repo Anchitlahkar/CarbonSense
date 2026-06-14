@@ -12,3 +12,4 @@ frontend/.env
 .agents/
 .docs
 .vercel
+.env*

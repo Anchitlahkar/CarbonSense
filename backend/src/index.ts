@@ -16,10 +16,25 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// CORS Sanitization
+const rawOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+// Remove invalid characters: quotes, commas, newlines, and trailing spaces
+const sanitizedOrigin = rawOrigin.replace(/['",\n\r]/g, '').trim();
+
+console.log(`[CORS_CONFIG] Resolved Origin: ${sanitizedOrigin}`);
+
+// Simple validation to ensure it looks like a URL
+if (!sanitizedOrigin.startsWith('http://') && !sanitizedOrigin.startsWith('https://')) {
+  console.error(`[CORS_ERROR] Malformed origin: ${sanitizedOrigin}`);
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(`Invalid CORS origin in production: ${sanitizedOrigin}`);
+  }
+}
+
 // Security Middlewares
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: sanitizedOrigin,
   credentials: true,
 }));
 
