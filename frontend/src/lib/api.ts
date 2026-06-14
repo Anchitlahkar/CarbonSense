@@ -17,6 +17,7 @@ function getHeaders(isMultipart = false): HeadersInit {
     headers['Authorization'] = `Bearer ${token}`;
   }
   
+  console.log(`[API_AUTH_HEADER] Authorization header: ${headers['Authorization'] || 'None'}`);
   return headers;
 }
 

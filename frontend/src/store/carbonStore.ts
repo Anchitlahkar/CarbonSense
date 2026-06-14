@@ -76,7 +76,7 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
     })),
 
   initializeAuth: async () => {
-    console.log('[AUTH_INIT] Initializing CarbonSense authentication...');
+    console.log('[AUTH_INIT] initializeAuth called');
     const isProduction = import.meta.env.PROD;
     const isDevelopment = import.meta.env.DEV;
     const hasKeys = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
@@ -95,7 +95,6 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
         console.log(`[AUTH_RESTORE] Auth state change event: ${event}`);
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session) {
-            console.log(`[AUTH_REFRESH_SUCCESS] Session verified for user: ${session.user.id}`);
             const userProfile: UserProfile = {
               id: session.user.id,
               username: session.user.email?.split('@')[0] || 'Researcher',
@@ -105,6 +104,9 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
               targetReductionGoal: 25,
               createdAt: new Date(session.user.created_at),
             };
+            console.log('[AUTH_SESSION] Session payload:', session);
+            console.log('[AUTH_SESSION] Zustand user stored:', userProfile);
+            console.log('[AUTH_LOGIN_SUCCESS] AuthStateChange state updated');
             set({ user: userProfile, session, authInitialized: true, isLoading: false });
             
             try {
@@ -138,6 +140,8 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
             targetReductionGoal: 25,
             createdAt: new Date(session.user.created_at),
           };
+          console.log('[AUTH_SESSION] Restored Session payload:', session);
+          console.log('[AUTH_SESSION] Restored Zustand user stored:', userProfile);
           set({ user: userProfile, session, authInitialized: true, isLoading: false });
           try {
             await get().fetchContext();
@@ -159,6 +163,8 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
       if (savedUser) {
         try {
           const parsed = JSON.parse(savedUser);
+          console.log('[AUTH_SESSION] Restored Mock Session payload:', { access_token: 'mock-jwt-token' });
+          console.log('[AUTH_SESSION] Restored Mock Zustand user stored:', parsed);
           set({ 
             user: parsed, 
             session: { access_token: 'mock-jwt-token' },
@@ -198,6 +204,9 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
     };
     localStorage.setItem('carbonsense_mock_user', JSON.stringify(mockUser));
     console.log(`[AUTH_SIGNED_IN] Mock login success for user: ${username}`);
+    console.log('[AUTH_SESSION] Mock Session payload:', { access_token: 'mock-jwt-token' });
+    console.log('[AUTH_SESSION] Mock Zustand user stored:', mockUser);
+    console.log('[AUTH_LOGIN_SUCCESS] Mock User login successful');
     set({ user: mockUser, session: { access_token: 'mock-jwt-token' }, authInitialized: true });
     
     get().fetchContext();
@@ -266,6 +275,7 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
         message.includes('expired')
       ) {
         mappedError = 'session_expired';
+        console.log('[SESSION_EXPIRED_TRIGGER] fetchContext API error mapped to session_expired. Status:', status, 'Message:', message);
       } else if (
         status === -1 || 
         message.includes('fetch') || 

@@ -16,6 +16,10 @@ export const Auth: React.FC = () => {
   const { loginMock, user, authInitialized } = useCarbonStore();
   const navigate = useNavigate();
 
+  const isDevelopment = import.meta.env.DEV;
+  const enableMockAuth = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+  const showGoogleOAuth = import.meta.env.VITE_ENABLE_GOOGLE_OAUTH === 'true' || (isDevelopment && enableMockAuth);
+
   useEffect(() => {
     if (authInitialized && user) {
       console.log('[AUTH_RESTORE] Logged-in user accessed Auth page. Redirecting to /dashboard.');
@@ -72,7 +76,8 @@ export const Auth: React.FC = () => {
             password,
           });
           if (signInError) throw signInError;
-          console.log(`[AUTH_SIGNED_IN] User signed in via credentials: ${data.user?.id}`);
+          console.log(`[AUTH_LOGIN_SUCCESS] User signed in via credentials: ${data.user?.id}`);
+          console.log('[AUTH_SESSION] Credentials Session payload:', data.session);
         }
         setIsLoading(false);
         navigate('/dashboard');
@@ -109,6 +114,14 @@ export const Auth: React.FC = () => {
     const isDevelopment = import.meta.env.DEV;
     const hasKeys = !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
     const enableMockAuth = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+    const enableGoogleOAuth = import.meta.env.VITE_ENABLE_GOOGLE_OAUTH === 'true';
+
+    if (!enableGoogleOAuth && !(isDevelopment && enableMockAuth)) {
+      console.error('[AUTH_REFRESH_FAILED] Google OAuth provider is disabled in this environment.');
+      setError('Google OAuth provider is disabled.');
+      setIsLoading(false);
+      return;
+    }
 
     if (isProduction && !hasKeys) {
       console.error('[AUTH_REFRESH_FAILED] Fatal: Production build missing Supabase keys.');
@@ -255,21 +268,25 @@ export const Auth: React.FC = () => {
         </form>
 
         {/* Separator */}
-        <div className="relative flex items-center justify-center my-5">
-          <div className="absolute inset-x-0 h-px bg-white/[0.03]" />
-          <span className="relative bg-bg-surface px-4 text-[12px] font-mono text-text-muted/40 tracking-[0.3em] font-black uppercase">
-            OR
-          </span>
-        </div>
+        {showGoogleOAuth && (
+          <div className="relative flex items-center justify-center my-5">
+            <div className="absolute inset-x-0 h-px bg-white/[0.03]" />
+            <span className="relative bg-bg-surface px-4 text-[12px] font-mono text-text-muted/40 tracking-[0.3em] font-black uppercase">
+              OR
+            </span>
+          </div>
+        )}
 
         {/* Google Auth Option */}
-        <button
-          onClick={triggerGoogleOAuth}
-          className="w-full py-2.5 rounded-sm bg-white/[0.02] border border-white/[0.05] hover:border-accent-blue/30 hover:bg-accent-blue/5 text-text-primary/90 font-mono font-bold text-[16px] flex items-center justify-center space-x-2 transition-all select-none uppercase cursor-pointer tracking-[0.2em]"
-        >
-          <ShieldCheck size={16} className="text-accent-blue/80" />
-          <span>SIGN_IN_WITH_OAUTH_2.0</span>
-        </button>
+        {showGoogleOAuth && (
+          <button
+            onClick={triggerGoogleOAuth}
+            className="w-full py-2.5 rounded-sm bg-white/[0.02] border border-white/[0.05] hover:border-accent-blue/30 hover:bg-accent-blue/5 text-text-primary/90 font-mono font-bold text-[16px] flex items-center justify-center space-x-2 transition-all select-none uppercase cursor-pointer tracking-[0.2em]"
+          >
+            <ShieldCheck size={16} className="text-accent-blue/80" />
+            <span>SIGN_IN_WITH_OAUTH_2.0</span>
+          </button>
+        )}
 
         {/* Switch panel */}
         <div className="mt-6 text-center">
