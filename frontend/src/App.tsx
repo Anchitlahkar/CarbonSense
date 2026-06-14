@@ -17,6 +17,7 @@ const Forecasts = lazy(() => import('./pages/Forecasts'));
 const Scanner = lazy(() => import('./pages/Scanner'));
 const Coach = lazy(() => import('./pages/Coach'));
 const Profile = lazy(() => import('./pages/Profile'));
+const DemoRedirect = lazy(() => import('./components/DemoRedirect'));
 
 export const App: React.FC = () => {
   const { initializeAuth } = useCarbonStore();
@@ -35,6 +36,7 @@ export const App: React.FC = () => {
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/demo" element={<DemoRedirect />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>

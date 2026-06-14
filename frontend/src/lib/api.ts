@@ -47,6 +47,66 @@ export async function fetchContextApi(): Promise<any> {
 }
 
 export async function analyzeReceiptApi(file: File): Promise<any> {
+  const state = useCarbonStore.getState();
+  if (state.isDemoMode) {
+    console.log('[DEMO_MODE] Intercepted analyzeReceiptApi. Simulating receipt scan...');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    return {
+      items: [
+        {
+          name: 'Organic Oat Milk 1L',
+          quantity: 2,
+          unit: 'l',
+          category: 'food',
+          subCategory: 'Plant Milk',
+          estimatedCarbonKg: 1.8,
+          confidence: 0.96
+        },
+        {
+          name: 'Fresh Avocados 4-pack',
+          quantity: 1,
+          unit: 'pack',
+          category: 'food',
+          subCategory: 'Fruits',
+          estimatedCarbonKg: 2.2,
+          confidence: 0.92
+        },
+        {
+          name: 'Organic Local Salad Greens',
+          quantity: 2,
+          unit: 'pack',
+          category: 'food',
+          subCategory: 'Vegetables',
+          estimatedCarbonKg: 0.6,
+          confidence: 0.98
+        }
+      ],
+      totalCarbonKg: 4.6,
+      confidence: 0.95,
+      validation: {
+        confidence: 0.95,
+        missingFields: [],
+        suspiciousFields: [],
+        requiresReview: false
+      },
+      audit: {
+        extractedItems: 3,
+        validatedItems: 3,
+        flaggedItems: 0,
+        modelUsed: 'Gemini 1.5 Flash (Simulated)',
+        processingTimeMs: 1500
+      },
+      usageMetrics: {
+        provider: 'google',
+        model: 'gemini-1.5-flash',
+        promptTokens: 412,
+        completionTokens: 256,
+        estimatedCostUsd: 0.0003,
+        latencyMs: 1500
+      }
+    };
+  }
+
   const formData = new FormData();
   formData.append('image', file);
   
@@ -81,6 +141,54 @@ export async function streamCoachChat(
   history: ChatMessage[],
   callbacks: StreamCallbacks
 ): Promise<void> {
+  const state = useCarbonStore.getState();
+  if (state.isDemoMode) {
+    console.log('[DEMO_MODE] Intercepted streamCoachChat. Simulating AI response...');
+    try {
+      const promptLower = message.toLowerCase();
+      let responseText = '';
+      
+      if (promptLower.includes('commute') || promptLower.includes('transit') || promptLower.includes('car') || promptLower.includes('transport')) {
+        responseText = 'Commuting choices represent your highest footprint optimization lever. According to your Carbon DNA profile, switching your current 80km daily sedan commute to the electric metro reduces your weekly transportation footprint from 24.5 kg down to 2.1 kg (a 91% reduction). Over a year, this dynamic switch saves over 1,100 kg CO2e, effectively cooling your Planet Twin world projection to 1.6 earths.';
+      } else if (promptLower.includes('diet') || promptLower.includes('food') || promptLower.includes('meat') || promptLower.includes('beef') || promptLower.includes('eat')) {
+        responseText = 'Based on your recent red meat meal entry (14.5 kg CO2e), reducing beef consumption to once per week offers immediate savings. Substituting beef with plant-based alternatives (like regional organic lentils or grains) lowers meal footprint by 92%. In your Planet Twin simulation, adopting weekday vegetarian habits saves 130 kg CO2e annually, improving your overall sustainability index.';
+      } else if (promptLower.includes('electricity') || promptLower.includes('energy') || promptLower.includes('ac') || promptLower.includes('power')) {
+        responseText = 'Your home AC energy logging (42.0 kg CO2e) represents your second highest emission source. Setting your AC temperature 2°C warmer and scheduling energy usage during non-peak grid hours can decrease home electricity emissions by 30%. I have placed a Smart Thermostat schedule recommendation at rank 2 in your Optimization Center to assist.';
+      } else {
+        responseText = `I have analyzed your request: "${message}". In Demo Mode, I recommend focusing on your three primary footprint categories: Transport (58%), Energy (20%), and Food (16%). Swapping your petrol car commutes for public transit and optimizing home temperature setpoints are your highest impact reduction candidates. Check the Optimization tab to review ranked MCDA savings options!`;
+      }
+
+      const chunks = responseText.match(/.{1,8}/g) || [responseText];
+      for (const chunk of chunks) {
+        callbacks.onChunk(chunk);
+        await new Promise((resolve) => setTimeout(resolve, 30));
+      }
+
+      callbacks.onDone({
+        usageMetrics: {
+          provider: 'google',
+          model: 'gemini-1.5-flash',
+          promptTokens: 840,
+          completionTokens: responseText.length / 4,
+          estimatedCostUsd: 0.0004,
+          latencyMs: 800
+        },
+        evidence: [
+          {
+            source: 'Localized Emission DB v2',
+            metric: 'Petrol Car commuting coefficient',
+            value: '0.306 kg/km',
+            confidence: 0.95
+          }
+        ]
+      });
+      return;
+    } catch (e: any) {
+      callbacks.onError(e.message || 'Error occurred during simulation');
+      return;
+    }
+  }
+
   try {
     const res = await fetch(`${API_BASE}/api/coach/chat`, {
       method: 'POST',

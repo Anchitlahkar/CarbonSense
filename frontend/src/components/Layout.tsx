@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import useCarbonStore from '../store/carbonStore';
 import CommandPalette from './CommandPalette';
+import DemoBanner from './DemoBanner';
 
 interface SidebarItemProps {
   to: string;
@@ -40,7 +41,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ to, icon, label, active }) =>
 };
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, logout } = useCarbonStore();
+  const { user, logout, isDemoMode } = useCarbonStore();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -206,6 +207,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       {/* Main Content Pane */}
       <main className="flex-1 flex flex-col overflow-y-auto min-w-0 bg-bg-primary relative">
+        {isDemoMode && <DemoBanner />}
         {/* Subtle grid background overlay */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
         

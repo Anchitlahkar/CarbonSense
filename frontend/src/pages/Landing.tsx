@@ -15,6 +15,10 @@ export const Landing: React.FC = () => {
     }
   };
 
+  const handleExploreDemo = () => {
+    navigate('/demo');
+  };
+
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col justify-between overflow-x-hidden selection:bg-accent-green/30 font-body relative">
       {/* Subtle grid background overlay */}
@@ -81,16 +85,16 @@ export const Landing: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row items-center gap-4 justify-center w-full max-w-md">
           <button
-            onClick={handleStart}
+            onClick={handleExploreDemo}
             className="w-full sm:w-auto px-8 py-3 rounded-sm bg-accent-green text-bg-primary font-mono font-black text-[16px] uppercase transition-all hover:bg-accent-green/90 cursor-pointer tracking-[0.2em] shadow-[0_0_20px_-5px_#00FF87]"
           >
-            Get Started
+            Explore Demo
           </button>
           <button
             onClick={handleStart}
             className="w-full sm:w-auto px-8 py-3 rounded-sm bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] hover:border-white/[0.2] text-text-primary/80 hover:text-text-primary font-mono font-bold text-[16px] transition-all uppercase tracking-[0.2em] cursor-pointer"
           >
-            Explore Demo
+            Sign In
           </button>
         </div>
 

@@ -10,12 +10,23 @@ import {
 } from '@carbonsense/shared-types';
 import supabase from '../lib/supabase';
 import { fetchContextApi } from '../lib/api';
+import {
+  demoUser,
+  demoCarbonEntries,
+  demoBehaviorProfile,
+  demoForecastProfile,
+  demoOptimizationPlan,
+  demoCarbonDNAProfile,
+  demoPlanetTwinProfile,
+  demoChatHistory
+} from '../lib/demoData';
 
 interface CarbonState {
   user: UserProfile | null;
   session: any | null;
   isLoading: boolean;
   authInitialized: boolean;
+  isDemoMode: boolean;
   error: string | null;
   carbonEntries: CarbonEntry[];
   behaviorProfile: BehaviorProfile | null;
@@ -33,6 +44,7 @@ interface CarbonState {
   logout: () => Promise<void>;
   initializeAuth: () => Promise<void>;
   fetchContext: () => Promise<void>;
+  enterDemoMode: () => void;
   addChatMessage: (msg: any) => void;
   clearChatHistory: () => void;
 }
@@ -42,6 +54,7 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
   session: null,
   isLoading: false,
   authInitialized: false,
+  isDemoMode: false,
   error: null,
   carbonEntries: [],
   behaviorProfile: null,
@@ -223,10 +236,12 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
       console.error('Error during Supabase signout', err);
     } finally {
       localStorage.removeItem('carbonsense_chat_history');
+      localStorage.removeItem('carbonsense_demo_chat_history');
       localStorage.removeItem('carbonsense_mock_user');
       set({ 
         user: null, 
         session: null, 
+        isDemoMode: false,
         carbonEntries: [],
         behaviorProfile: null,
         forecastProfile: null,
@@ -246,6 +261,11 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
   },
 
   fetchContext: async () => {
+    if (get().isDemoMode) {
+      console.log('[DEMO_MODE] fetchContext bypassed, using mock dataset');
+      set({ isLoading: false });
+      return;
+    }
     set({ isLoading: true, error: null });
     try {
       const data = await fetchContextApi();
@@ -294,9 +314,33 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
     }
   },
 
+  enterDemoMode: () => {
+    console.log('[DEMO_MODE] Entering/Resetting demo mode state');
+    set({
+      user: demoUser,
+      session: { access_token: 'demo-jwt-token' },
+      isDemoMode: true,
+      authInitialized: true,
+      carbonEntries: [...demoCarbonEntries],
+      behaviorProfile: { ...demoBehaviorProfile },
+      forecastProfile: { ...demoForecastProfile },
+      optimizationPlan: { ...demoOptimizationPlan },
+      carbonDNAProfile: { ...demoCarbonDNAProfile },
+      planetTwinProfile: { ...demoPlanetTwinProfile },
+      chatHistory: [...demoChatHistory],
+      isLoading: false,
+      error: null
+    });
+  },
+
   addChatMessage: (msg) => {
+    const isDemo = get().isDemoMode;
     const newHistory = [...get().chatHistory, msg];
-    localStorage.setItem('carbonsense_chat_history', JSON.stringify(newHistory));
+    if (isDemo) {
+      localStorage.setItem('carbonsense_demo_chat_history', JSON.stringify(newHistory));
+    } else {
+      localStorage.setItem('carbonsense_chat_history', JSON.stringify(newHistory));
+    }
     set({ chatHistory: newHistory });
   },
 
@@ -308,7 +352,11 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
         content: 'Hello. I am TERRA, your carbon intelligence assistant. I have synthesized your behavior logs, forecasts, and Carbon DNA to help you build an action roadmap. How can I guide you today?'
       }
     ];
-    localStorage.setItem('carbonsense_chat_history', JSON.stringify(welcome));
+    if (get().isDemoMode) {
+      localStorage.setItem('carbonsense_demo_chat_history', JSON.stringify(welcome));
+    } else {
+      localStorage.setItem('carbonsense_chat_history', JSON.stringify(welcome));
+    }
     set({ chatHistory: welcome });
   }
 }));
