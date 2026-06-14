@@ -266,7 +266,21 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
       set({ isLoading: false });
       return;
     }
+    
+    // Prevent duplicate concurrent requests to avoid Supabase auth rate limits
+    if (get().isLoading) {
+      console.log('[FETCH_CONTEXT] Already loading context, skipping duplicate request.');
+      return;
+    }
+    
+    // If all profiles are already hydrated, we don't need to fetch them again just because of navigation
+    if (get().carbonDNAProfile && get().planetTwinProfile && get().optimizationPlan && get().forecastProfile && get().behaviorProfile) {
+      console.log('[FETCH_CONTEXT] Profiles already hydrated, skipping unnecessary request.');
+      return;
+    }
+
     set({ isLoading: true, error: null });
+
     try {
       const data = await fetchContextApi();
       set({
@@ -295,7 +309,11 @@ export const useCarbonStore = create<CarbonState>((set, get) => ({
         message.includes('expired')
       ) {
         mappedError = 'session_expired';
-        console.log('[SESSION_EXPIRED_TRIGGER] fetchContext API error mapped to session_expired. Status:', status, 'Message:', message);
+        console.error('[SESSION_EXPIRED_TRIGGER]');
+        console.error(`Reason: Matched auth error conditions`);
+        console.error(`Status: ${status}`);
+        console.error(`Message: ${message}`);
+        console.error(`[AUTH_STATE] User: ${!!get().user}, Session: ${!!get().session}, JWT Present: ${!!get().session?.access_token}`);
       } else if (
         status === -1 || 
         message.includes('fetch') || 

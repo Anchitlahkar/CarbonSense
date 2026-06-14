@@ -23,15 +23,17 @@ declare global {
   }
 }
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
+const sanitizeHeaderValue = (val: string) => val.replace(/[^\x20-\x7E]/g, '').replace(/['",]/g, '').trim();
+
+const supabaseUrl = sanitizeHeaderValue(process.env.SUPABASE_URL || '');
+const supabaseServiceKey = sanitizeHeaderValue(process.env.SUPABASE_SERVICE_KEY || '');
 
 let supabase: any = null;
 if (supabaseUrl && supabaseServiceKey) {
   supabase = createClient(supabaseUrl, supabaseServiceKey);
 }
 
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseAnonKey = sanitizeHeaderValue(process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '');
 let supabaseAnon: any = null;
 if (supabaseUrl && supabaseAnonKey) {
   supabaseAnon = createClient(supabaseUrl, supabaseAnonKey);
@@ -57,7 +59,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   }
 
   const rawToken = authHeader.split(' ')[1] || '';
-  const token = rawToken.replace(/^["']|["']$/g, '').trim();
+  const token = sanitizeHeaderValue(rawToken);
 
   try {
     const isMockToken = token === 'mock-jwt-token' || token.startsWith('mock-');
@@ -123,8 +125,10 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
     if (authError || !user) {
       console.error('[AUTH_REFRESH_FAILED] Invalid or expired auth session:', authError);
+      console.log(`[FAILED_REQUEST] Endpoint: ${req.originalUrl}`);
+      console.log(`[FAILED_REQUEST] Error details:`, authError);
       console.log(`[BACKEND_AUTH_RESULT] Failure: Invalid or expired auth session. Error: ${authError?.message || 'User not found'}`);
-      return res.status(401).json({ data: null, error: 'Invalid or expired auth session' });
+      return res.status(401).json({ data: null, error: 'Invalid or expired auth session', details: authError?.message });
     }
 
     req.user = {

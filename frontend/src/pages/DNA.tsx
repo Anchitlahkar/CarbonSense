@@ -171,7 +171,15 @@ export const DNA: React.FC = () => {
                     <span className="text-text-primary/70">{dim.value}%</span>
                   </div>
                   <div className="h-1 bg-white/[0.02] rounded-full overflow-hidden">
-                    <div className={`h-full ${dim.color} rounded-full opacity-80`} style={{ width: `${dim.value}%` }} />
+                    <div 
+                      className={`h-full ${dim.color} rounded-full opacity-80`} 
+                      style={{ width: `${dim.value}%` }} 
+                      role="progressbar"
+                      aria-valuenow={dim.value}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`${dim.label} dimension level`}
+                    />
                   </div>
                 </div>
               ))}

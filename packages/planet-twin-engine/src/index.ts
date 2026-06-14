@@ -1,3 +1,17 @@
+/**
+ * @module PlanetTwinEngine
+ * 
+ * The Planet Twin Engine simulates ecological "worlds" based on user carbon behavior.
+ * It visualizes the physical impact of carbon footprints through planetary equivalents,
+ * temperature projections, and trajectory divergences.
+ * 
+ * **Core Responsibilities:**
+ * - Trajectory Simulation: Modeling 30, 90, and 365-day emission paths.
+ * - Planet Equivalency: Calculating "Number of Earths" required.
+ * - Narrative Generation: Creating situational awareness stories for different worlds.
+ * - World Divergence: Analyzing the gap between current and optimized trajectories.
+ */
+
 import { Result, ok, fail } from '@carbonsense/core';
 import {
   BehaviorProfile,

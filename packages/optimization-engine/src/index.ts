@@ -1,3 +1,17 @@
+/**
+ * @module OptimizationEngine
+ * 
+ * The Optimization Engine generates actionable, prioritized roadmaps for carbon reduction.
+ * Using Multi-Criteria Decision Analysis (MCDA), it ranks interventions based on
+ * reduction potential, implementation difficulty, and behavioral resistance.
+ * 
+ * **Core Responsibilities:**
+ * - Reduction Estimation: Calculating the kg CO2e impact of interventions.
+ * - Difficulty Modeling: Estimating effort based on lifestyle markers.
+ * - Resistance Scoring: Predicting the likelihood of behavioral rejection.
+ * - Action Ranking: Prioritizing the "Next Best Action" for the user.
+ */
+
 import { Result, ok, fail } from '@carbonsense/core';
 import { BehaviorProfile, ForecastProfile, OptimizationPlan } from '@carbonsense/shared-types';
 import OptimizationPlanner from './OptimizationPlanner.js';

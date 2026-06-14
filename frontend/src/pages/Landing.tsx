@@ -49,18 +49,18 @@ export const Landing: React.FC = () => {
       <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 max-w-5xl mx-auto relative z-10">
         <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-sm border border-accent-blue/10 bg-accent-blue/5 text-accent-blue text-[14px] font-mono mb-8 uppercase font-bold tracking-[0.2em] shadow-[inset_0_0_15px_-5px_rgba(0,212,255,0.2)]">
           <span className="animate-pulse">●</span>
-          <span>AI CARBON INTELLIGENCE COCKPIT</span>
+          <span>UNIFIED CARBON AWARENESS PLATFORM</span>
         </div>
 
         <h1 className="text-[48px] md:text-[64px] font-display font-black tracking-tighter mb-6 leading-[1.1] text-text-primary uppercase drop-shadow-lg">
           CarbonSense<br />
           <span className="text-accent-green bg-clip-text text-transparent bg-gradient-to-r from-accent-green to-[#00D4FF]">
-            Powered by TERRA
+            Awareness Intelligence
           </span>
         </h1>
 
         <p className="text-text-muted/80 max-w-2xl text-[16px] md:text-[18px] font-body leading-relaxed mb-8 font-medium">
-          An AI Carbon Intelligence Assistant that structures behavioral patterns, projects emissions, and builds automated reduction roadmaps.
+          A Unified Carbon Footprint Awareness Platform that structures behavioral patterns, projects emissions, and builds automated reduction roadmaps.
         </p>
 
         {/* Feature Checkmarks List for 5-Second Clarity */}

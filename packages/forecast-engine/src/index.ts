@@ -1,3 +1,17 @@
+/**
+ * @module ForecastEngine
+ * 
+ * The Forecast Engine provides predictive intelligence for carbon emission trajectories.
+ * It combines baseline momentum with behavioral trends and counterfactual scenarios
+ * to project future climate impact with high-fidelity confidence scoring.
+ * 
+ * **Core Responsibilities:**
+ * - Momentum Forecasting: Projecting the "status quo" path.
+ * - Scenario Analysis: Modeling the impact of specific behavioral shifts.
+ * - Risk Identification: Detecting drivers that threaten reduction goals.
+ * - Counterfactual Modeling: Analyzing "what if" past behaviors had differed.
+ */
+
 import { Result, fail } from '@carbonsense/core';
 import { ForecastInput, ForecastProfile } from '@carbonsense/shared-types';
 import ForecastAggregator from './ForecastAggregator.js';

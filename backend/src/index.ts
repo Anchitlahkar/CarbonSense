@@ -18,8 +18,11 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Sanitization
 const rawOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
-// Remove invalid characters: quotes, commas, newlines, and trailing spaces
-const sanitizedOrigin = rawOrigin.replace(/['",\n\r]/g, '').trim();
+// Remove ALL non-ASCII or non-printable characters, then remove quotes and commas
+const sanitizedOrigin = rawOrigin
+  .replace(/[^\x20-\x7E]/g, '') // Keep only printable ASCII
+  .replace(/['",\n\r]/g, '')    // Remove quotes, commas, newlines
+  .trim();
 
 console.log(`[CORS_CONFIG] Resolved Origin: ${sanitizedOrigin}`);
 

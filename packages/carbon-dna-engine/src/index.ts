@@ -1,3 +1,16 @@
+/**
+ * @module CarbonDNAEngine
+ * 
+ * The Carbon DNA Engine profiles behavioral markers to classify users into carbon archetypes.
+ * It analyzes behavioral momentum, readiness for change, and intervention resistance
+ * to build a long-term behavioral carbon genome.
+ * 
+ * **Core Responsibilities:**
+ * - Archetype Classification: Categorizing users (e.g., TransportDominant).
+ * - Dimension Profiling: Measuring volatility, readiness, and intensity.
+ * - Profile Aggregation: Synthesizing multiple intelligence layers into a unified DNA report.
+ */
+
 import { Result, ok, fail } from '@carbonsense/core';
 import {
   BehaviorProfile,

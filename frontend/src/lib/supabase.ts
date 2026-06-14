@@ -7,8 +7,13 @@ if (isProduction && !hasKeys) {
   throw new Error("Supabase configuration missing in production");
 }
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder';
+const sanitize = (val: string) => val.replace(/[^\x20-\x7E]/g, '').replace(/['",]/g, '').trim();
+
+const supabaseUrl = sanitize(import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co');
+const supabaseAnonKey = sanitize(import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder');
+
+console.log(`[AUTH_INIT] Supabase URL: ${supabaseUrl}`);
+console.log(`[AUTH_INIT] Supabase Anon Key Length: ${supabaseAnonKey.length}`);
 
 if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
   console.warn(

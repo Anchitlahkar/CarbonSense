@@ -5,6 +5,7 @@ const API_BASE = (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.t
   : (import.meta.env.DEV ? 'http://localhost:5000' : '');
 
 function getHeaders(isMultipart = false): HeadersInit {
+  const sanitize = (val: string) => val.replace(/[^\x20-\x7E]/g, '').replace(/['",]/g, '').trim();
   const headers: HeadersInit = {};
   if (!isMultipart) {
     headers['Content-Type'] = 'application/json';
@@ -12,12 +13,14 @@ function getHeaders(isMultipart = false): HeadersInit {
   
   // Attach auth JWT if present in store
   const state = useCarbonStore.getState();
-  const token = state.session?.access_token;
-  if (token) {
+  const rawToken = state.session?.access_token;
+  if (rawToken) {
+    const token = sanitize(rawToken);
     headers['Authorization'] = `Bearer ${token}`;
   }
   
-  console.log(`[API_AUTH_HEADER] Authorization header: ${headers['Authorization'] || 'None'}`);
+  const authVal = (headers as any)['Authorization'] || 'None';
+  console.log(`[API_AUTH_HEADER] Authorization header: ${authVal}`);
   return headers;
 }
 
